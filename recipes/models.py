@@ -25,6 +25,8 @@ class Ingredient(models.Model):
     def __str__(self):
         return self.title
 
+# TODO: добавить метаданные к описанию моделей для читаемости в админпанели
+
 
 class Tag(models.Model):
     """
@@ -119,6 +121,8 @@ class Recipe(models.Model):
     def __str__(self):
         return self.title
 
+# TODO: добавить метаданные к описанию моделей для читаемости в админпанели
+
 
 class IngredientAmount(models.Model):
     """
@@ -138,6 +142,8 @@ class IngredientAmount(models.Model):
         'Количество ингредиентов',
         default=0
     )
+
+# TODO: добавить метаданные к описанию моделей для читаемости в админпанели
 
 
 class Cart(models.Model):

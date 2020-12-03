@@ -3,7 +3,10 @@ from django.db import models
 
 from recipes.models import Recipe
 
+
 User = get_user_model()
+
+# TODO: добавить метаданные к описанию моделей для читаемости в админпанели
 
 
 class FavoriteRecipes(models.Model):
@@ -19,6 +22,8 @@ class FavoriteRecipes(models.Model):
         on_delete=models.CASCADE,
         related_name='favorites_recipes'
     )
+
+# TODO: добавить метаданные к описанию моделей для читаемости в админпанели
 
 
 class SubscribeToAuthor(models.Model):

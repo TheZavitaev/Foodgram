@@ -1,6 +1,7 @@
+import os
 from pathlib import Path
 
-BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = '#r()u!_z3de!1m&angd1^918*y04-os7ehqv!isqe1nw*q#+*^'
 
@@ -9,6 +10,8 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
+    'django.contrib.sites',
+    'django.contrib.flatpages',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -73,7 +76,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru-ru'
 
 TIME_ZONE = 'UTC'
 
@@ -83,4 +86,20 @@ USE_L10N = True
 
 USE_TZ = True
 
+# Настройки статики
 STATIC_URL = '/static/'
+
+if DEBUG:
+    STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, 'static')
+    ]
+else:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+# Папка хранения изображений
+MEDIA_URL = '/recipe_images/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'recipe_images')
+
+# Login
+LOGIN_URL = '/auth/login/'
+LOGIN_REDIRECT_URL = 'index'
