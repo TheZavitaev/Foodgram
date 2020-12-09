@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.db import models
-
+from django.urls import reverse
+from django.utils.text import slugify
 
 User = get_user_model()
 
@@ -13,7 +14,7 @@ class Ingredient(models.Model):
         'Название ингредиента',
         max_length=255
     )
-    measure = models.CharField(
+    dimension = models.CharField(
         'Единица измерения',
         max_length=50,
     )
@@ -103,6 +104,9 @@ class Recipe(models.Model):
     pub_date = models.DateTimeField(
         'Дата публикации',
         auto_now_add=True,
+        db_index=True
+    )
+    slug = models.SlugField(
         db_index=True
     )
     serving = models.PositiveSmallIntegerField(

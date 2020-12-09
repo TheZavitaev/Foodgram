@@ -1,7 +1,6 @@
-from django.db import models
+from django.contrib.auth import get_user_model
 
 #  TODO: нужно ли расширять стандартную модель? Валидация по мылу при регистрации?
 
 
-class User:
-    pass
+User = get_user_model()

@@ -47,5 +47,14 @@ urlpatterns = [
     # # рецепты пользователя
     # path('<str:username>/', views.profile, name='profile'),
     # главная страница
-    path('', views.index, name='index'),
+    path(
+        '',
+        views.recipe_list,
+        name='recipe_list'
+    ),
+    path(
+        '<str:username>/<int:recipe_id>/',
+        views.recipe_view,
+        name='recipe_view'
+    ),
 ]
