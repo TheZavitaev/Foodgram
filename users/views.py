@@ -3,11 +3,13 @@ from django.views.generic import CreateView
 
 from users.forms import CreationForm
 
+# TODO: Посмотри карена, там норм
+
 
 class SignUp(CreateView):
     form_class = CreationForm
-    success_url = "/auth/login/"
-    template_name = "signup.html"
+    success_url = "/accounts/login/"
+    template_name = "registration/sign_up.html"
 
     def form_valid(self, form):
         email = form.cleaned_data['email']

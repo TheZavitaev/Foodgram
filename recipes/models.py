@@ -27,6 +27,9 @@ class Ingredient(models.Model):
 
 # TODO: добавить метаданные к описанию моделей для читаемости в админпанели
 
+# TODO: прикрутить python-usda для получения информации о составе и
+#  энергетической ценности продуктов питания
+
 
 class Tag(models.Model):
     """
@@ -77,7 +80,7 @@ class Recipe(models.Model):
     )
     image = models.ImageField(
         'Изображение',
-        upload_to='recipe_images/'
+        upload_to='media/'
     )
     description = models.TextField(
         'Описание рецепта',
@@ -102,6 +105,14 @@ class Recipe(models.Model):
         auto_now_add=True,
         db_index=True
     )
+    serving = models.PositiveSmallIntegerField(
+        'Количество порций',
+        help_text='в штуках',
+        default=1
+    )
+
+# TODO: сделать теги для формирования подборок (кето, мексиканская,
+#  итальянская, масленица, etc)
 
     def get_ingredients(self):
         return '\n'.join(
@@ -160,9 +171,11 @@ class Cart(models.Model):
         verbose_name='Список рецептов'
     )
 
-# TODO: подумать над тем, как это отрисовывать
     def __str__(self):
         return self.recipe.title
 
     class Meta:
         unique_together = ('shopper', 'recipe')
+# TODO: прикрутить датасет с ценами продуктов питания (
+#  https://data.gov.ru/taxonomy/term/74/datasets)
+

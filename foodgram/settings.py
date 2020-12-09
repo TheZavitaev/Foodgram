@@ -43,6 +43,9 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'foodgram.context_processors.year',
+                # 'foodgram.context_processors.cart_list_counter',
+                # 'foodgram.context_processors.paginator_page',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
@@ -86,6 +89,8 @@ USE_L10N = True
 
 USE_TZ = True
 
+SITE_ID = 1
+
 # Настройки статики
 STATIC_URL = '/static/'
 
@@ -97,9 +102,9 @@ else:
     STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Папка хранения изображений
-MEDIA_URL = '/recipe_images/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'recipe_images')
+MEDIA_URL = 'media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Login
-LOGIN_URL = '/auth/login/'
 LOGIN_REDIRECT_URL = 'index'
+LOGOUT_REDIRECT_URL = 'index'
