@@ -90,7 +90,7 @@ class Recipe(models.Model):
     ingredients = models.ManyToManyField(
         Ingredient,
         related_name='recipe_ingredient',
-        through='IngredientAmount',
+        through='IngredientValue',
         through_fields=('recipe', 'ingredient')
     )
     tags = models.ManyToManyField(
@@ -115,50 +115,51 @@ class Recipe(models.Model):
         default=1
     )
 
-# TODO: сделать теги для формирования подборок (кето, мексиканская,
-#  итальянская, масленица, etc)
+    def __str__(self):
+        return self.title
 
-    def get_ingredients(self):
-        return '\n'.join(
-            self.ingredients.all().values_list('title', flat=True))
-    get_ingredients.short_description = 'Ингредиенты'
+    @property
+    def taglist(self):
+        return list(self.tags.all())
 
-    def get_tags(self):
-        return '\n'.join(
-            self.tags.all().values_list('title', flat=True))
-    get_tags.short_description = 'Теги'
+    @property
+    def ingredientslist(self):
+        return list(self.ingredients.all())
 
     class Meta:
         ordering = ('-pub_date',)
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
 
-    def __str__(self):
-        return self.title
-
-# TODO: добавить метаданные к описанию моделей для читаемости в админпанели
+# TODO: сделать теги для формирования подборок (кето, мексиканская,
+#  итальянская, масленица, etc)
 
 
-class IngredientAmount(models.Model):
+class IngredientValue(models.Model):
     """
     Модель количества ингридиентов в рецепте
     """
     ingredient = models.ForeignKey(
         Ingredient,
-        related_name='ingredient_amount',
+        related_name='ingredient_values',
         on_delete=models.CASCADE,
     )
     recipe = models.ForeignKey(
         Recipe,
-        related_name='recipe_ingredient_amount',
+        related_name='ingredient_values',
         on_delete=models.CASCADE
     )
-    amount = models.PositiveSmallIntegerField(
+    value = models.PositiveSmallIntegerField(
         'Количество ингредиентов',
         default=0
     )
 
-# TODO: добавить метаданные к описанию моделей для читаемости в админпанели
+    class Meta:
+        verbose_name = 'Количество ингридиентов'
+        verbose_name_plural = 'Количество ингридиентов'
+
+    def __str__(self):
+        return str(self.value)
 
 
 class Cart(models.Model):

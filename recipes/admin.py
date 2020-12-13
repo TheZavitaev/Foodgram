@@ -1,16 +1,16 @@
 from django.contrib import admin
 from django.db.models import Count
 
-from .models import Recipe, Ingredient, Tag, IngredientAmount, Cart
+from .models import Recipe, Ingredient, Tag, IngredientValue, Cart
 
 
-class IngredientAmountInline(admin.TabularInline):
+class IngredientValueInline(admin.TabularInline):
     model = Recipe.ingredients.through
 
 
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
-    inlines = (IngredientAmountInline, )
+    inlines = (IngredientValueInline, )
     list_display = (
         'id', 'title', 'author',
         'image', 'cooking_time',
@@ -41,9 +41,9 @@ class IngredientAdmin(admin.ModelAdmin):
     search_fields = ('^title', )
 
 
-@admin.register(IngredientAmount)
+@admin.register(IngredientValue)
 class IngredientAmountAdmin(admin.ModelAdmin):
-    list_display = ('id', 'ingredient', 'recipe', 'amount', )
+    list_display = ('id', 'ingredient', 'recipe', 'value', )
 
 
 @admin.register(Tag)

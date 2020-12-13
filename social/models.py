@@ -17,10 +17,10 @@ class FavoriteRecipes(models.Model):
         User,
         on_delete=models.CASCADE
     )
-    recipes = models.ForeignKey(
+    recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        related_name='favorites_recipes'
+        related_name='favorite_recipe'
     )
 
 # TODO: добавить метаданные к описанию моделей для читаемости в админпанели

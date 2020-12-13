@@ -2,43 +2,42 @@
 {% load user_filters %}
 {% load static %}
 
-{% block title %}Войти на сайт{% endblock title %}
+{% block title %}Войти на сайт{% endblock %}
 
 {% block stylesheet %}
     <link rel="stylesheet" href="{% static '/pages/form.css' %}">
-{% endblock stylesheet %}
+{% endblock %}
 
 {% block content %}
-<div class="main__header">
-    <h1 class="main__title">Войти на сайт</h1>
-</div>
-
-<div class="form-container">
-    <form class="form" method="post" action="">
-    {% csrf_token %}
-    <div class="form__group">
-        <span class="form__error">{{ form.non_field_errors.as_text|escape }}</span>
+    <div class="main__header">
+        <h1 class="main__title">Войти на сайт</h1>
     </div>
-    {% for field in form %}
+
+    <div class="form-container">
+        <form class="form" method="post" action="">
+        {% csrf_token %}
         <div class="form__group">
+            <span class="form__error">{{ form.non_field_errors.as_text|escape }}</span>
+        </div>
+        {% for field in form %}
+            <div class="form__group">
 
-            <label for="{{ field.id_for_label }}" class="form__label">{{ field.label }}</label>
-            <div class="form__field-group">
-                {{ field|addclass:"form__input" }}
+                <label for="{{ field.id_for_label }}" class="form__label">{{ field.label }}</label>
+                <div class="form__field-group">
+                    {{ field|addclass:'form__input' }}
 
-                {% if field.errors %}
-                    <span class="form__error">{{ field.errors.as_text|escape }}</span>
-                {% endif %}
+                    {% if field.errors %}
+                        <span class="form__error">{{ field.errors.as_text|escape }}</span>
+                    {% endif %}
 
+                </div>
             </div>
-        </div>
-    {% endfor %}
+        {% endfor %}
 
-        <div class="form__footer">
-            <button type="submit" class="button button_style_blue">Войти</button>
-            <a href="{% url 'password_reset' %}" class="form__forgot-link">Забыли пароль?</a>
-        </div>
-    </form>
-</div>
-
-{% endblock content %}
+            <div class="form__footer">
+                <button type="submit" class="button button_style_blue">Войти</button>
+                <a href="{% url 'password_reset' %}" class="form__forgot-link">Забыли пароль?</a>
+            </div>
+        </form>
+    </div>
+{% endblock %}

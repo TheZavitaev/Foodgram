@@ -5,15 +5,28 @@ from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 from foodgram import settings
+from social.views import add_favorites, favorites, remove_favorites, \
+    my_subscriptions, subscribe, unsubscribe
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('accounts/', include('users.urls')),
-    path('accounts/', include('django.contrib.auth.urls')),
+
+    path('auth/', include('users.urls')),
+    path('auth/', include('django.contrib.auth.urls')),
 
     path('', include('recipes.urls')),
-    # path('', include('social.urls')),
 
+
+# переместить в социал
+    path('favorites', add_favorites, name='add_favorites'),
+    path('<str:username>/favorites/', favorites, name='favorite'),
+    path('favorites/<int:recipe_id>', remove_favorites, name='remove_favorites'),
+
+    path('subscriptions', subscribe, name='subscribe'),
+    path('<str:username>/subscriptions/', my_subscriptions, name='my_subscriptions'),
+    path('subscriptions/<int:author_id>', unsubscribe, name='unsubscribe'),
+
+
+    path('admin/', admin.site.urls),
     # # flatpages
     # path('about/', include('django.contrib.flatpages.urls')),
     # path(
