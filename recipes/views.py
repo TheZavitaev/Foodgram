@@ -1,10 +1,11 @@
+from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 
 from users.models import User
 from .forms import RecipeForm
-from .models import Recipe
+from .models import Recipe, Ingredient
 from .utils import get_ingredients, get_tags
 
 
@@ -13,11 +14,11 @@ def index(request):
     paginator = Paginator(recipes, 6)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
-    return render(request, 'recipes/recipes_list.html', {
-        'recipes': recipes,
-        'paginator': paginator,
-        'page': page
-    })
+    return render(
+        request,
+        'recipes/recipes_list.html',
+        {'recipes': recipes, 'paginator': paginator, 'page': page}
+    )
 
 
 def recipe_view(request, username, recipe_id):
@@ -29,14 +30,9 @@ def recipe_view(request, username, recipe_id):
         return render(
             request,
             'recipes/recipe_detail.html',
-            {'recipe': recipe,
-             'ingredients': ingredients
-             }
+            {'recipe': recipe, 'ingredients': ingredients}
         )
-    profile = get_object_or_404(
-        User,
-        username=username
-    )
+    profile = get_object_or_404(User, username=username)
     return render(
         request,
         'recipes/recipe_detail.html',
@@ -63,10 +59,8 @@ def recipe_add(request):
     else:
         form = RecipeForm()
         tags = {'Завтрак': 'Завтрак', 'Обед': 'Обед', 'Ужин': 'Ужин'}
-    return render(request,
-                  'recipes/recipe_form.html',
-                  {'form': form, 'tags': tags}
-                  )
+    return render(request, 'recipes/recipe_form.html',
+                  {'form': form, 'tags': tags})
 
 
 @login_required
@@ -87,40 +81,29 @@ def recipe_delete(request, recipe_id, username):
 
 @login_required
 def recipe_edit(request, recipe_id, username):
-    recipe = get_object_or_404(Recipe, id=recipe_id)
-    author = get_object_or_404(User, id=recipe.author_id)
+    editable_recipe = get_object_or_404(Recipe, pk=recipe_id)
+    author = get_object_or_404(User, pk=editable_recipe.author_id)
 
     if request.user != author:
-        return redirect(
-            'recipe_view',
-            username=username,
-            recipe_id=recipe_id
-        )
+        return redirect('recipe_view', username=username, recipe_id=recipe_id)
+
+    form = RecipeForm(request.POST, instance=editable_recipe,
+                      files=request.FILES or None)
 
     if request.method == 'POST':
         ingredients = get_ingredients(request)
         tags = get_tags(request)
-        form = RecipeForm(request.POST,
-                          instance=recipe,
-                          files=request.FILES or None
-                          )
-        if form.is_valid():
-            recipe = form.save(commit=False)
-            recipe.author = request.user
-            recipe.save()
-            for tag in tags:
-                recipe.tags.add(tag)
-            for item in ingredients:
-                recipe.ingredients.add(item.id)
-            return redirect('index')
 
-    tags = [tag.id for tag in recipe.taglist]
-    ingredients = recipe.ingredientslist
-    form = RecipeForm(instance=recipe)
+        if form.is_valid():
+            form.save()
+            return redirect('recipe_view',
+                            username=request.user.username,
+                            recipe_id=recipe_id
+                            )
+
     return render(request,
                   'recipes/recipe_form.html',
-                  {'form': form, 'recipe': recipe,
-                   'tags': tags, 'ingredients': ingredients}
+                  {'form': form, 'recipe': editable_recipe, 'author': author}
                   )
 
 
@@ -133,3 +116,24 @@ def profile(request, username):
     return render(request, 'recipes/recipes_list.html',
                   {'profile': profile, 'page': page,
                    'paginator': paginator})
+
+
+def ingredients_for_js(request):
+    text = request.GET['query']
+    ingredients = Ingredient.objects.filter(title__istartswith=text)
+    ing_list = []
+    ing_dict = {}
+    for ing in ingredients:
+        ing_dict['title'] = ing.title
+        ing_dict['dimension'] = ing.dimension
+        ing_list.append(ing_dict)
+
+    return JsonResponse(ing_list, safe=False)
+
+
+def page_not_found(request, exception):
+    return render(request, 'misc/404.html', {'path': request.path}, status=404)
+
+
+def server_error(request):
+    return render(request, 'misc/500.html', status=500)

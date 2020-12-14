@@ -6,8 +6,6 @@ from recipes.models import Recipe
 
 User = get_user_model()
 
-# TODO: добавить метаданные к описанию моделей для читаемости в админпанели
-
 
 class FavoriteRecipes(models.Model):
     """
@@ -23,7 +21,9 @@ class FavoriteRecipes(models.Model):
         related_name='favorite_recipe'
     )
 
-# TODO: добавить метаданные к описанию моделей для читаемости в админпанели
+    class Meta:
+        verbose_name = 'Любимый рецепт'
+        verbose_name_plural = 'Любимые рецепты'
 
 
 class SubscribeToAuthor(models.Model):
@@ -44,10 +44,12 @@ class SubscribeToAuthor(models.Model):
     )
 
     def __str__(self):
-        return f'follower - {self.user} | following - {self.author}'
+        return f'{self.user.username} подписан на {self.author.username}'
 
     class Meta:
         unique_together = ('user', 'author')
+        verbose_name = 'Подписка на автора'
+        verbose_name_plural = 'Подписки на авторов'
 
 
 # TODO: добавить комментарии и рейтинговую систему

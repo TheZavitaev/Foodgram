@@ -2,6 +2,7 @@ import json
 
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.db.models import Count
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators.http import require_http_methods
@@ -46,31 +47,33 @@ def remove_favorites(request, recipe_id):
 
 @login_required
 def my_subscriptions(request, username):
-    recipes = Recipe.objects.filter(favorite_recipe__user=request.user)
-    paginator = Paginator(recipes, 6)
+    user = get_object_or_404(User, username=username)
+    subscriptions = User.objects.prefetch_related('recipe_author').filter(
+        following__user=user.id)
+    paginator = Paginator(subscriptions, 6)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
-    return render(request, 'recipes/recipes_list.html', {
-        'recipes': recipes,
-        'paginator': paginator,
-        'page': page,
-        'username': username
-    })
+    return render(
+        request,
+        'recipes/subscription_list.html',
+        {'page': page, 'paginator': paginator}
+    )
 
 
 @login_required
-def subscribe(request, author_id):
+def subscribe(request):
     author_id = json.loads(request.body).get('id')
     author = get_object_or_404(User, pk=author_id)
     if request.user != author:
-        SubscribeToAuthor.objects.get_or_create(user=request.user, author=author)
+        SubscribeToAuthor.objects.get_or_create(user=request.user,
+                                                author=author)
     return JsonResponse({'success': True})
 
 
 @login_required
 def unsubscribe(request, author_id):
-    author_id = json.loads(request.body).get('id')
-    author = get_object_or_404(User, id=author_id)
+    author = get_object_or_404(User, pk=author_id)
     if request.user != author:
-        SubscribeToAuthor.objects.filter(user=request.user, author=author).delete()
+        SubscribeToAuthor.objects.filter(user=request.user,
+                                         author=author).delete()
     return JsonResponse({'success': True})

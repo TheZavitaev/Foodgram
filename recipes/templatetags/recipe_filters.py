@@ -12,9 +12,9 @@ def is_favorite(recipe_id, user_id):
         user_id=user_id, recipe_id=recipe_id).exists()
 
 
-@register.filter(name='is_following')
-def is_following(author, user):
-    return SubscribeToAuthor.objects.filter(user=user, author=author).exists()
+@register.filter(name='is_subscribed')
+def is_subscribed(author, user_id):
+    return SubscribeToAuthor.objects.filter(user=user_id, author=author).exists()
 
 
 @register.filter(name='plural_recipes')

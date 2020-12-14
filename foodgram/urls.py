@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.contrib.flatpages import views
+from django.conf.urls import handler404, handler500
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
@@ -7,6 +8,9 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from foodgram import settings
 from social.views import add_favorites, favorites, remove_favorites, \
     my_subscriptions, subscribe, unsubscribe
+
+handler404 = 'recipes.views.page_not_found'  # noqa
+handler500 = 'recipes.views.server_error'  # noqa
 
 urlpatterns = [
 
@@ -27,17 +31,17 @@ urlpatterns = [
 
 
     path('admin/', admin.site.urls),
-    # # flatpages
-    # path('about/', include('django.contrib.flatpages.urls')),
-    # path(
-    #     'about-project/', views.flatpage,
-    #     {'url': '/about-project/'}, name='about-project'),
-    # path(
-    #     'about-author/', views.flatpage,
-    #     {'url': '/about-author/'}, name='about-author'),
-    # path(
-    #     'about-spec/', views.flatpage,
-    #     {'url': '/about-spec/'}, name='about-spec'),
+
+    path('about/', include('django.contrib.flatpages.urls')),
+    path(
+        'about-project/', views.flatpage,
+        {'url': '/about-project/'}, name='about-project'),
+    path(
+        'about-author/', views.flatpage,
+        {'url': '/about-author/'}, name='about-author'),
+    path(
+        'about-spec/', views.flatpage,
+        {'url': '/about-spec/'}, name='about-spec'),
 ]
 
 if settings.DEBUG:

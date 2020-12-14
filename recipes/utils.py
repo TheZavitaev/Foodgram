@@ -25,7 +25,7 @@ def create_ingridient(recipe, data):
             ingredient, _ = Ingredient.objects.get_or_create(
                 title=title, defaults={'dimension': 'шт'}
             )
-            IngredientAmount.objects.update_or_create(
+            IngredientValue.objects.update_or_create(
                 ingredient=ingredient, recipe=recipe, defaults={'value': value}
             )
 

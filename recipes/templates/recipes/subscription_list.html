@@ -1,0 +1,63 @@
+{% extends 'recipes/base.html' %}
+{% load static %}
+{% load recipe_filters %}
+{% load thumbnail %}
+{% block title %}Мои подписки{% endblock title %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static '/pages/myFollow.css' %}">
+{% endblock %}
+
+{% block content %}
+
+    <div class="main__header">
+        <h1 class="main__title">Мои подписки</h1>
+    </div>
+
+    <div class="card-list">
+
+    {% for author in page %}
+        <div class="card-user" data-author="{{ author.id }}">
+            <div class="card-user__header">
+                <a href="{% url 'profile' author.username %}"><h2 class="card-user__title">{{ author.get_full_name }}</h2></a>
+            </div>
+
+            <div class="card-user__body">
+                    {% for recipe in author.recipe_author.all|slice:':3' %}
+                        <ul class="card-user__items">
+                            <li class="card-user__item">
+                                <div class="recipe">
+                                        <a href="{% url 'recipe_view' recipe.author.username recipe.id %}"><img src="{{ recipe.image.url }}" alt="{{ recipe.title }}" class="recipe__image"></a>
+                                    <h3 class="recipe__title">{{ recipe.title }}</h3>
+                                    <p class="recipe__text"><span class="icon-time"></span> {{ recipe.cooking_time }} мин.</p>
+                                </div>
+                            </li>
+                    {% endfor %}
+
+                {% if author.recipe_author.all|length > 3 %}
+                    <li class="card-user__item">
+                        <a href="{% url 'profile' author.username %}" class="card-user__link link">Еще {{ author.recipe_author.all|length|add:'-3'}} рецепт{{ author.recipe_author.all|length|add:'-3'|plural_recipes }}...</a>
+                    </li>
+                {% endif %}
+                </ul>
+            </div>
+            <div class="card-user__footer">
+                <button class="button button_style_light-blue button_size_auto" name="subscribe">Отписаться от автора</button>
+            </div>
+        </div>
+        {% empty %}
+            <p>Вы пока ни на кого не подписались.</p>
+        {% endfor %}
+    </div>
+    
+    {% if page_obj.has_other_pages %}
+        {% include 'recipes/includes/paginator.html' with items=page paginator=paginator %}
+    {% endif %}
+        
+{% endblock %}
+
+{% block scripts %}
+
+    {% include 'recipes/includes/scripts.html' with page="myFollow" %}
+    
+{% endblock scripts %}

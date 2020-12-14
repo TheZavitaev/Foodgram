@@ -1,7 +1,7 @@
 from django.utils.datastructures import MultiValueDictKeyError
 
-from recipes.models import Tag
-
+from recipes.models import Tag, Recipe
+from users.models import User
 
 def get_filters(request):
     request.GET = request.GET.copy()

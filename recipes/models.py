@@ -26,8 +26,6 @@ class Ingredient(models.Model):
     def __str__(self):
         return self.title
 
-# TODO: добавить метаданные к описанию моделей для читаемости в админпанели
-
 # TODO: прикрутить python-usda для получения информации о составе и
 #  энергетической ценности продуктов питания
 
@@ -55,6 +53,10 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.title
+
+    class Meta:
+        verbose_name = 'Тег'
+        verbose_name_plural = 'Теги'
 
     @property
     def color(self):
@@ -181,6 +183,9 @@ class Cart(models.Model):
 
     class Meta:
         unique_together = ('shopper', 'recipe')
+        verbose_name = 'Корзина'
+        verbose_name_plural = 'Корзины'
+
 # TODO: прикрутить датасет с ценами продуктов питания (
 #  https://data.gov.ru/taxonomy/term/74/datasets)
 
