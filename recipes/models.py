@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
@@ -148,7 +149,7 @@ class IngredientValue(models.Model):
     )
     recipe = models.ForeignKey(
         Recipe,
-        related_name='ingredient_values',
+        related_name='recipe_values',
         on_delete=models.CASCADE
     )
     value = models.PositiveSmallIntegerField(
@@ -164,27 +165,37 @@ class IngredientValue(models.Model):
         return str(self.value)
 
 
-class Cart(models.Model):
-    shopper = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='shopper_carts',
-        verbose_name='Покупатель'
-    )
-    recipe = models.ForeignKey(
-        Recipe,
-        on_delete=models.CASCADE,
-        related_name='recipe_carts',
-        verbose_name='Список рецептов'
-    )
+class PurchaseManager(models.Manager):
+    def counter(self, user):
+        try:
+            return super().get_queryset().get(user=user).recipes.count()
+        except ObjectDoesNotExist:
+            return 0
 
-    def __str__(self):
-        return self.recipe.title
+    def get_purchases_list(self, user):
+        try:
+            return super().get_queryset().get(user=user).recipes.all()
+        except ObjectDoesNotExist:
+            return []
+
+    def get_user_purchase(self, user):
+        try:
+            return super().get_queryset().get(user=user)
+        except ObjectDoesNotExist:
+            purchase = Purchase(user=user)
+            purchase.save()
+            return purchase
+
+
+class Purchase(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE,
+                             verbose_name='Покупатель')
+    recipes = models.ManyToManyField(Recipe, verbose_name='Список рецептов')
+    purchase = PurchaseManager()
 
     class Meta:
-        unique_together = ('shopper', 'recipe')
-        verbose_name = 'Корзина'
-        verbose_name_plural = 'Корзины'
+        verbose_name = 'Список покупок'
+        verbose_name_plural = 'Список покупок'
 
 # TODO: прикрутить датасет с ценами продуктов питания (
 #  https://data.gov.ru/taxonomy/term/74/datasets)

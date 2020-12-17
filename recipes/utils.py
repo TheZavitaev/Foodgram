@@ -1,14 +1,25 @@
-import random
-import string
+import os
 
+from django.contrib.staticfiles import finders
 from django.shortcuts import get_object_or_404
-from django.utils.datastructures import MultiValueDictKeyError
-from django.utils.text import slugify
 
-from .models import Ingredient, IngredientValue, Tag, Recipe
+from foodgram import settings
+from .models import Ingredient, Tag, IngredientValue
 
 
-def get_ingredients(recipe):
+def get_ingredients_for_js(request):
+    text = request.GET['query']
+    ingredients = Ingredient.objects.filter(title__istartswith=text)
+    ing_list = []
+    ing_dict = {}
+    for ing in ingredients:
+        ing_dict['title'] = ing.title
+        ing_dict['dimension'] = ing.dimension
+        ing_list.append(ing_dict)
+    return ing_list
+
+
+def get_ingredients_for_views(recipe):
     ingredients = []
     for ingredient in recipe.ingredients.all():
         value = ingredient.ingredient_values.get(recipe=recipe)
@@ -16,18 +27,27 @@ def get_ingredients(recipe):
     return ingredients
 
 
-def create_ingridient(recipe, data):
-    for key, value in data.items():
-        arg = key.split('_')
-        if arg[0] == 'nameIngredient':
-            title = value
-        if arg[0] == 'valueIngredient':
-            ingredient, _ = Ingredient.objects.get_or_create(
-                title=title, defaults={'dimension': 'шт'}
+def get_ingredients_from_form(request):
+    ingredients = {}
+    for key, ingredient_name in request.POST.items():
+        if 'nameIngredient' in key:
+            _ = key.split('_')
+            ingredients[ingredient_name] = int(
+                request.POST[f'valueIngredient_{_[1]}']
             )
-            IngredientValue.objects.update_or_create(
-                ingredient=ingredient, recipe=recipe, defaults={'value': value}
-            )
+    return ingredients
+
+
+def save_recipe(ingredients, recipe):
+    recipe_ingredients = []
+
+    for title, value in ingredients.items():
+        ingredient = get_object_or_404(Ingredient, title=title)
+        rec_ingredient = IngredientValue(
+            value=value, ingredient=ingredient, recipe=recipe
+        )
+        recipe_ingredients.append(rec_ingredient)
+    IngredientValue.objects.bulk_create(recipe_ingredients)
 
 
 def get_tags(request):
@@ -37,43 +57,43 @@ def get_tags(request):
     return tags
 
 
-# def get_filters(request):
-#     request.GET = request.GET.copy()
-#     filters = {tag.tag_options: 'checked' for tag in Tag.objects.all()}
-#
-#     for key in filters:
-#         try:
-#             filters[key] = (
-#                 'checked' if request.GET[key] == '1' else ''
-#             )
-#         except MultiValueDictKeyError:
-#             pass
-#     return filters
-#
-#
-# def filtered_recipes(request):
-#     filters = get_filters(request)
-#     tag_names = [k for k, v in filters.items() if v == 'checked']
-#     recipes = Recipe.objects.filter(tag__tag_name_eng__in=tag_names).distinct()
-#     return filters, recipes
+def get_tags_from_get(request):
+    tags_from_get = []
+    if 'tags' in request.GET:
+        tags_from_get = request.GET.get('tags')
+        _ = tags_from_get.split(',')
+        tags_qs = Tag.objects.filter(title__in=_).values('title')
+    else:
+        tags_qs = False
+    return [tags_qs, tags_from_get]
 
 
-# def random_string_generator(
-#         size=10,
-#         chars=string.ascii_lowercase + string.digits
-#         ):
-#     return ''.join(random.choice(chars) for _ in range(size))
-#
-#
-# def unique_slug_generator(instance):
-#     slug = slugify(instance.title.lower(), allow_unicode=True)
-#
-#     Klass = instance.__class__
-#     qs_exists = Klass.objects.filter(slug=slug).exists()
-#     if qs_exists:
-#         slug = '{slug}-{randstr}'.format(
-#                     slug=slug,
-#                     randstr=random_string_generator(size=4)
-#                 )
-#         return unique_slug_generator(instance)
-#     return slug
+def link_callback(uri, rel):
+    """
+    Convert HTML URIs to absolute system paths so xhtml2pdf can access those
+    resources
+    """
+    result = finders.find(uri)
+    if result:
+        if not isinstance(result, (list, tuple)):
+            result = [result]
+        result = list(os.path.realpath(path) for path in result)
+        path = result[0]
+    else:
+        sUrl = settings.STATIC_URL
+        sRoot = settings.STATIC_ROOT
+        mUrl = settings.MEDIA_URL
+        mRoot = settings.MEDIA_ROOT
+
+        if uri.startswith(mUrl):
+            path = os.path.join(mRoot, uri.replace(mUrl, ""))
+        elif uri.startswith(sUrl):
+            path = os.path.join(sRoot, uri.replace(sUrl, ""))
+        else:
+            return uri
+
+    if not os.path.isfile(path):
+        raise Exception(
+            'media URI must start with %s or %s' % (sUrl, mUrl)
+        )
+    return path

@@ -39,7 +39,7 @@
                 <div class="form__field-group">
                     <div class="tags">
                         <div class="tags__item">
-                            <input type="checkbox" name="breakfast" id="id_breakfast" class="tags__checkbox tags__checkbox_style_orange">
+                            <input type="checkbox" name="breakfast" id="id_breakfast" class="tags__checkbox tags__checkbox_style_orange" checked>
                             <label for="id_breakfast" class="tags__label">Завтрак</label>
                         </div>
                         <div class="tags__item">
@@ -97,13 +97,8 @@
             <div class="form__group">
                 <span class="form__label">Загрузить фото</span>
                 <div class="form__field-group">
-                    {% comment %} <label for="form.image.id_for_label" class="form__file-button">Выбрать файл</label> {% endcomment %}
-                    {{ form.image }}
-                    {% comment %} <input type="file" class="form__file" name="file" id="id_file"> {% endcomment %}
-
-                    {% if form.image.errors %}
-                        <span class="form__error">{{ form.image.errors.as_text|escape }}</span>
-                    {% endif %}
+                    {{ form.image|addclass:"form__file-button"  }}
+                    <span class="form__error">{{ error|escape }}</span>
                 </div>
             </div>
 

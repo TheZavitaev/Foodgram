@@ -19,7 +19,7 @@
     <div class="main__header">
         <h1 class="main__title">
             {%if profile %}Рецепты автора: {{ profile.get_full_name }}
-            {% elif current_page == 'favorite' %} Избранное
+            {% elif current_page == 'favorites' %} Избранное
             {% else %}Рецепты
             {% endif %}
         </h1>
@@ -50,7 +50,7 @@
             </div>
 
             <div class="card__footer">
-            {% if recipe.slug in shoplist %}
+            {% if recipe.id|recipe_in_cart:user.id %}
                 <button class="button button_style_light-blue-outline" name="purchases"><span class="icon-check button__icon"></span> Рецепт добавлен</button>
             {% else %}
                 <button class="button button_style_light-blue" name="purchases" data-out><span class="icon-plus button__icon"></span>Добавить в покупки</button>
@@ -86,4 +86,4 @@
     {% else %}
         {% include 'recipes/includes/scripts.html' with page='indexNotAuth' %}
   {% endif %}
-{% endblock scripts %}
+{% endblock %}

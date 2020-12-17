@@ -1,3 +1,4 @@
+{% load recipe_filters %}
 <header class="header">
     <nav class="nav">
         <div class="nav__container container">
@@ -7,10 +8,10 @@
                 <li class="nav__item {% if follow %}nav__item_active{% endif %}"><a href="{% url 'my_subscriptions' user.username %}" class="nav__link link">Мои подписки</a></li>
                 <li class="nav__item {% if new_recipe %}nav__item_active{% endif %}"><a href="{% url 'new_recipe' %}" class="nav__link link">Создать рецепт</a></li>
                 <li class="nav__item {% if favorite %}nav__item_active{% endif %}"><a href="{% url 'favorite' user.username %}" class="nav__link link">Избранное</a></li>
-                <li class="nav__item {% if cart_list %}nav__item_active{% endif %}"><a href="#" class="nav__link link">Список покупок</a> <span class="badge badge_style_blue nav__badge" id="counter">#</span></li>
+                <li class="nav__item {% if cart_list %}nav__item_active{% endif %}"><a href="{% url 'purchases' %}" class="nav__link link">Список покупок</a> <span class="badge badge_style_blue nav__badge" id="counter">{{ user.id|purchase_list|length }}</span></li>
         {% else %}
                 <li class="nav__item {% if current_page == 'index' %}nav__item_active {% else %}nav__item_disabled{% endif %}"><a href="{% url 'index' %}" class="nav__link link">Рецепты</a></li>
-{#                <li class="nav__item {% if current_page == 'shoppinglist' %}nav__item_active {% else %}nav__item_disabled{% endif %}"><a href="{% url 'shoppinglist_detail'%}" class="nav__link link">Список покупок</a><span class="badge badge_style_blue nav__badge" id="counter">{{ shoplist|length }}</span></li>#}
+{#                <li class="nav__item {% if current_page == 'purchases' %}nav__item_active {% else %}nav__item_disabled{% endif %}"><a href="{% url 'purchases' %}" class="nav__link link">Список покупок</a><span class="badge badge_style_blue nav__badge" id="counter">{{ user.id|purchase_list|length }}</span></li>#}
         {% endif %}
             </ul>
 

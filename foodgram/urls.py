@@ -13,7 +13,7 @@ handler404 = 'recipes.views.page_not_found'  # noqa
 handler500 = 'recipes.views.server_error'  # noqa
 
 urlpatterns = [
-
+    path('admin/', admin.site.urls),
     path('auth/', include('users.urls')),
     path('auth/', include('django.contrib.auth.urls')),
 
@@ -28,20 +28,6 @@ urlpatterns = [
     path('subscriptions', subscribe, name='subscribe'),
     path('<str:username>/subscriptions/', my_subscriptions, name='my_subscriptions'),
     path('subscriptions/<int:author_id>', unsubscribe, name='unsubscribe'),
-
-
-    path('admin/', admin.site.urls),
-
-    path('about/', include('django.contrib.flatpages.urls')),
-    path(
-        'about-project/', views.flatpage,
-        {'url': '/about-project/'}, name='about-project'),
-    path(
-        'about-author/', views.flatpage,
-        {'url': '/about-author/'}, name='about-author'),
-    path(
-        'about-spec/', views.flatpage,
-        {'url': '/about-spec/'}, name='about-spec'),
 ]
 
 if settings.DEBUG:

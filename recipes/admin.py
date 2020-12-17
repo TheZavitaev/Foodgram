@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.db.models import Count
 
-from .models import Recipe, Ingredient, Tag, IngredientValue, Cart
+from .models import Recipe, Ingredient, Tag, IngredientValue, Purchase
 
 
 class IngredientValueInline(admin.TabularInline):
@@ -20,20 +20,6 @@ class RecipeAdmin(admin.ModelAdmin):
     autocomplete_fields = ('author', )
     ordering = ('-pub_date', )
 
-    # def get_queryset(self, request):
-    #     queryset = super().get_queryset(request)
-    #     return queryset.annotate(_get_favorite=Count('recipe_favorite'))
-    #
-    # def get_tag(self, obj):
-    #     return list(obj.recipe_tag.values_list('title', flat=True))
-    #
-    # def get_favorite(self, obj):
-    #     return obj._get_favorite
-    #
-    # get_tag.short_description = 'теги'
-    # get_favorite.short_description = 'добавлен в избранное, раз'
-    # get_favorite.admin_order_field = '_get_favorite'
-
 
 @admin.register(Ingredient)
 class IngredientAdmin(admin.ModelAdmin):
@@ -51,6 +37,6 @@ class TagAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', )
 
 
-@admin.register(Cart)
-class CartAdmin(admin.ModelAdmin):
-    list_display = ('recipe', 'shopper',)
+@admin.register(Purchase)
+class PurchaseAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'user', )
