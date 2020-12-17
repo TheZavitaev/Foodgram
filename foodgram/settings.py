@@ -4,15 +4,17 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = '#r()u!_z3de!1m&angd1^918*y04-os7ehqv!isqe1nw*q#+*^'
+# os.environ.get('SECRET_KEY')
 
-DEBUG = True
+DEBUG = True  # os.environ.get('DEBUG')
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = []  # [os.environ.get('IP'), os.environ.get('DOMAIN')]
 
 INSTALLED_APPS = [
     'recipes',
     'users',
     'social',
+    'about',
 
     'django.contrib.sites',
     'django.contrib.flatpages',
@@ -56,7 +58,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'foodgram.wsgi.application'
 
-if DEBUG:
+if not DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ.get('DB_NAME'),
+            'USER': os.environ.get('POSTGRES_USER'),
+            'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+            'HOST': os.environ.get('DB_HOST'),
+            'PORT': os.environ.get('DB_PORT'),
+        }
+    }
+else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -109,4 +122,3 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 LOGIN_URL = '/auth/login'
 LOGIN_REDIRECT_URL = 'index'
 LOGOUT_REDIRECT_URL = 'index'
-

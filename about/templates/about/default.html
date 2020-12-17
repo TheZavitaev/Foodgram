@@ -2,13 +2,13 @@
 {% load static %}
 {% block title %}
     {{ flatpage.title }}
-{% endblock title %}
+{% endblock %}
 
 {% block stylesheet %}
     <link rel="stylesheet" href="{% static '/pages/index.css' %}">
 {% endblock %}
 
 {% block content %}
-        <h1>{{ flatpage.title }}</h1>
-        {{ flatpage.content }}
+        <h1>{{ title }}</h1>
+        {{ text }}
 {% endblock  %}
