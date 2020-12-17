@@ -1,0 +1,48 @@
+{% extends 'recipes/base.html' %}
+{% load static %}
+{% load thumbnail %}
+
+{% block title %}
+    Список покупок
+{% endblock %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static '/pages/shopList.css' %}">
+{% endblock stylesheet %}
+
+{% block content %}
+    <div class="main__header">
+        <h1 class="main__title">Список покупок {% if not recipes_list %}пуст{% endif %}</h1>
+    </div>
+    <div class="card-list card-list_column">
+
+        <ul class="shopping-list">
+        {% for recipe in recipes_list %}
+            <li class="shopping-list__item" data-id="{{ recipe.id }}">
+                <div class="recipe recipe_reverse">
+
+                    {% thumbnail recipe.image "90x90" crop="center" as im %}
+                        <img src="{{ im.url }}" alt="{{ recipe.title }}" class="recipe__image recipe__image_big">
+                    {% endthumbnail %}
+
+                    <a href="{% url 'recipe_view' recipe.author.username recipe.id %}" class="link" target="_blank"><h3 class="recipe__title">{{ recipe.title }}</h3></a>
+                    <p class="recipe__text"><span class="icon-time"></span> {{ recipe.cooking_time }} мин.</p>
+                </div>
+                <a href="{% url 'delete_purchase' recipe.id %}" class="shopping-list__button link">Удалить</a>
+            </li>
+        {% endfor %}
+
+        </ul>
+        {% if recipes_list %}
+            <a href="{% url 'download_shop_list' %}" target="_blank"><button class="button button_style_blue">Скачать список</button></a>
+        {% endif %}
+    </div>
+
+
+{% endblock %}
+
+{% block scripts %}
+
+    {% include 'recipes/includes/scripts.html' with page='shopList' %}
+
+{% endblock %}

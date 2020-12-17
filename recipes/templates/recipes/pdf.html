@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    {% load static %}
+    <title>Food|Gram</title>
+    <style type="text/css">
+        @font-face {
+            font-family: arial;
+            src: url('/static/fonts/arial.ttf')
+            format('truetype');
+        }
+        div {
+            font-family: arial, serif;
+            color: #333333;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <div>
+            <h3>Сгененрировано сайтом food-no-gram</h3>
+            <hr align="center" width="600" size="1" color="#000" />
+        </div>
+        <p></p>
+        <div>
+            <h1 align="center">Список покупок</h1>
+        </div>
+        <hr align="center" width="500" size="1" color="#f00" />
+        <div>
+            <ul>
+            {% for ingredient in ingredients %}
+                <li>
+                <div>
+                    <h2>{{ ingredient.ingredients__title }} - {{ ingredient.ingredient_values__value }} {{ ingredient.ingredients__dimension }}</h2>
+                </div>
+                </li>
+            {% endfor %}
+            </ul>
+            <hr align="center" width="500" size="2" color="#ff0000" />
+            <h2 align="center">Спасибо, что воспользовались нашим сервисом!</h2>
+        </div>
+    </main>
+
+</body>
+</html>
