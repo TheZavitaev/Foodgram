@@ -1,4 +1,8 @@
+![foodgram](https://github.com/TheZavitaev/foodgram-project/workflows/foodgram/badge.svg)
 # foodgram-project
+https://da-eda.ga/
+
+
 foodgram-project
 Для загрузки тестовой базы воспользуйтесь командой "py manage.py load_data"
 
