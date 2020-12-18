@@ -130,4 +130,3 @@ dmypy.json
 
 .idea
 db.sqlite3
-recipes/static
