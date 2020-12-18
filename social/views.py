@@ -1,17 +1,11 @@
 import json
-
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.db.models import Count
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
-from django.views.decorators.http import require_http_methods
-from django.views.generic.base import View
 
 from recipes.models import Recipe
-from social.utils import get_filters
 from social.models import FavoriteRecipes, SubscribeToAuthor
-
 from users.models import User
 
 
@@ -40,7 +34,7 @@ def add_favorites(request):
 @login_required
 def remove_favorites(request, recipe_id):
     recipe = get_object_or_404(Recipe, pk=recipe_id)
-    removed = FavoriteRecipes.objects.filter(
+    FavoriteRecipes.objects.filter(
         user=request.user, recipe=recipe).delete()
     return JsonResponse({'success': True})
 

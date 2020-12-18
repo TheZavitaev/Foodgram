@@ -1,8 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
-from django.urls import reverse
-from django.utils.text import slugify
+
 
 User = get_user_model()
 
@@ -26,9 +25,6 @@ class Ingredient(models.Model):
 
     def __str__(self):
         return self.title
-
-# TODO: прикрутить python-usda для получения информации о составе и
-#  энергетической ценности продуктов питания
 
 
 class Tag(models.Model):
@@ -134,9 +130,6 @@ class Recipe(models.Model):
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
 
-# TODO: сделать теги для формирования подборок (кето, мексиканская,
-#  итальянская, масленица, etc)
-
 
 class IngredientValue(models.Model):
     """
@@ -196,7 +189,3 @@ class Purchase(models.Model):
     class Meta:
         verbose_name = 'Список покупок'
         verbose_name_plural = 'Список покупок'
-
-# TODO: прикрутить датасет с ценами продуктов питания (
-#  https://data.gov.ru/taxonomy/term/74/datasets)
-

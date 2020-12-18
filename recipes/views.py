@@ -1,5 +1,4 @@
 import json
-
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import Sum
@@ -13,7 +12,7 @@ from xhtml2pdf import pisa
 
 from users.models import User
 from .forms import RecipeForm
-from .models import Recipe, Ingredient, IngredientValue, Purchase
+from .models import Recipe, IngredientValue, Purchase
 from .utils import (get_tags_from_get, get_ingredients_for_views,
                     get_ingredients_for_js, get_ingredients_from_form,
                     link_callback, save_recipe)

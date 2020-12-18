@@ -50,6 +50,3 @@ class SubscribeToAuthor(models.Model):
         unique_together = ('user', 'author')
         verbose_name = 'Подписка на автора'
         verbose_name_plural = 'Подписки на авторов'
-
-
-# TODO: добавить комментарии и рейтинговую систему

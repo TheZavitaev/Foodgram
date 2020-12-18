@@ -3,12 +3,12 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = '#r()u!_z3de!1m&angd1^918*y04-os7ehqv!isqe1nw*q#+*^'
-# os.environ.get('SECRET_KEY')
+# SECRET_KEY = '#r()u!_z3de!1m&angd1^918*y04-os7ehqv!isqe1nw*q#+*^'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
-DEBUG = True  # os.environ.get('DEBUG')
+DEBUG = os.environ.get('DEBUG')
 
-ALLOWED_HOSTS = []  # [os.environ.get('IP'), os.environ.get('DOMAIN')]
+ALLOWED_HOSTS = [os.environ.get('IP'), os.environ.get('DOMAIN')]
 
 INSTALLED_APPS = [
     'recipes',
