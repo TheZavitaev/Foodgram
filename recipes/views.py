@@ -124,12 +124,18 @@ def recipe_edit(request, recipe_id, username):
 def profile(request, username):
     profile = get_object_or_404(User, username=username)
     recipes_author = Recipe.objects.filter(author=profile)
+    tags_qs, tags_from_get = get_tags_from_get(request)
+    if tags_qs:
+        recipes_author = Recipe.objects.filter(author=profile,
+                                        tags__title__in=tags_qs).distinct()
+
     paginator = Paginator(recipes_author, 6)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     return render(request, 'recipes/recipes_list.html',
                   {'profile': profile, 'page': page,
-                   'paginator': paginator})
+                   'paginator': paginator, 'tags': tags_from_get}
+                  )
 
 
 def ingredients_for_js(request):

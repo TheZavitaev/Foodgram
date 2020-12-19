@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
 
 from recipes.models import Recipe
+from recipes.utils import get_tags_from_get
 from social.models import FavoriteRecipes, SubscribeToAuthor
 from users.models import User
 
@@ -12,14 +13,18 @@ from users.models import User
 @login_required
 def favorites(request, username):
     recipes = Recipe.objects.filter(favorite_recipe__user=request.user)
+    tags_qs, tags_from_get = get_tags_from_get(request)
+
+    if tags_qs:
+        recipes = Recipe.objects.filter(favorite_recipe__user=request.user,
+                                        tags__title__in=tags_qs).distinct()
+
     paginator = Paginator(recipes, 6)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     return render(request, 'recipes/recipes_list.html', {
-        'recipes': recipes,
-        'paginator': paginator,
-        'page': page,
-        'username': username
+        'recipes': recipes, 'paginator': paginator, 'page': page,
+        'username': username, 'tags': tags_from_get
     })
 
 

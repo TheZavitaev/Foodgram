@@ -6,10 +6,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '#r()u!_z3de!1m&angd1^918*y04-os7ehqv!isqe1nw*q#+*^'
 # SECRET_KEY = os.environ.get('SECRET_KEY')
 
-DEBUG = False
+DEBUG = True
 # DEBUG = os.environ.get('DEBUG')
 
-ALLOWED_HOSTS = ['localhost', '84.201.176.31', 'da-eda.ga', 'www.da-eda.ga']
+ALLOWED_HOSTS = ['localhost', '84.201.176.31', 'da-eda.ga',
+                 'www.da-eda.ga', '127.0.0.1']
 
 INSTALLED_APPS = [
     'recipes',

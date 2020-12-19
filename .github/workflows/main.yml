@@ -81,8 +81,8 @@ jobs:
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
           port: 22
-          source: "./.env, nginx/default.conf, ./docker-compose.yaml"
-          target: "/home/thezavitaev/code"
+          source: './.env, nginx/default.conf, ./docker-compose.yaml'
+          target: '/home/thezavitaev/code'
 
       - name: Executing remote ssh commands to deploy
         uses: appleboy/ssh-action@master
