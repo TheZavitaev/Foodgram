@@ -1,7 +1,8 @@
 ![foodgram](https://github.com/TheZavitaev/foodgram-project/workflows/foodgram/badge.svg)
 
-#**[Da-Eda-project](https://da-eda.ga/)**
+# **[Da-Eda-project](https://da-eda.ga/)**
 
+![Banner](/static/banner.jpg)
 Выпускной проект программы Яндекс.Практикум **[Python-разработчик](https://praktikum.yandex.ru/backend-developer/)**
 
 Da-eda - это сайт, на котором пользователи могут публиковать рецепты, добавлять чужие рецепты в избранное 
