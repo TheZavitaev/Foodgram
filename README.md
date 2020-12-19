@@ -4,7 +4,7 @@ https://da-eda.ga/
 
 
 foodgram-project
-Для загрузки тестовой базы воспользуйтесь командой "py manage.py load_data"
+
 
 Для работы CI\CD необходимо добавить в гитхаб секреты:
 DB_ENGINE=django.db.backends.postgresql
@@ -23,4 +23,26 @@ USER=юзернейм на сервере
 SSH_KEY=-----BEGIN OPENSSH PRIVATE KEY-----Не забывайте, что эти штуки тоже относятся к приваткею-----END OPENSSH PRIVATE KEY-----
 SSH_PORT=по умолчанию 22, есть вариант открыть другой порт на сервере и пользоваться им
 TELEGRAM_TO=Ваш id в телеграме
-TELEGRAM_TOKEN=Токен Вашего бота в телеграме'''
+TELEGRAM_TOKEN=Токен Вашего бота в телеграме
+
+Запускаем процесс сборки и запуска контейнеров:
+
+docker-compose up
+Запускаем терминал внутри контейнера (на вин системах используйте winpty docker-compose exec web bash ):
+
+docker-compose exec web bash
+Накатываем миграции:
+
+python manage.py migrate
+
+Собираем статику:
+
+python manage.py collectstatic --no-input
+
+Для создания администратора воспользуйтесь командой:
+
+python manage.py createsuperuser
+
+Для загрузки базы ингредиентов воспользуйтесь командой:
+
+python manage.py load_data

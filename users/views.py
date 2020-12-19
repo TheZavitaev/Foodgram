@@ -19,5 +19,5 @@ class SignUp(CreateView):
                 password=form.cleaned_data['password1'],
             )
             login(request, user)
-            return redirect('recipe_list')
+            return redirect('index')
         return render(request, 'sign_up.html', {'form': form})

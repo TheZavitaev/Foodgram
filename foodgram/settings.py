@@ -12,7 +12,7 @@ if not DEVELOPER_MODE:
 
 else:
     SECRET_KEY = '#r()u!_z3de!1m&angd1^918*y04-os7ehqv!isqe1nw*q#+*^'
-    DEBUG = True
+    DEBUG = False
     ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 INSTALLED_APPS = [
