@@ -1,48 +1,44 @@
 ![foodgram](https://github.com/TheZavitaev/foodgram-project/workflows/foodgram/badge.svg)
-# foodgram-project
-https://da-eda.ga/
 
+#**[Da-Eda-project](https://da-eda.ga/)**
 
-foodgram-project
+Выпускной проект программы Яндекс.Практикум **[Python-разработчик](https://praktikum.yandex.ru/backend-developer/)**
 
+Da-eda - это сайт, на котором пользователи могут публиковать рецепты, добавлять чужие рецепты в избранное 
+и подписываться на публикации других авторов. Сервис «Список покупок» позволит пользователям 
+создавать список продуктов, которые нужно купить для приготовления выбранных блюд.
 
-Для работы CI\CD необходимо добавить в гитхаб секреты:
-DB_ENGINE=django.db.backends.postgresql
-DB_NAME=postgres
-POSTGRES_USER=postgres_user
-POSTGRES_PASSWORD=postgres_password
-DB_HOST=db
-DB_PORT=5432
-SECRET_KEY=блинный джанговский секреткей
-IP=IP вашего сервера,
-DOMAIN=ваш домен
-DEBUG=True
-DOCKER_USERNAME=Ваш никнейм на докерхабе
-DOCKER_PASSWORD=ваш пароль от докерхаба
-USER=юзернейм на сервере
-SSH_KEY=-----BEGIN OPENSSH PRIVATE KEY-----Не забывайте, что эти штуки тоже относятся к приваткею-----END OPENSSH PRIVATE KEY-----
-SSH_PORT=по умолчанию 22, есть вариант открыть другой порт на сервере и пользоваться им
-TELEGRAM_TO=Ваш id в телеграме
-TELEGRAM_TOKEN=Токен Вашего бота в телеграме
+##Quick-start
+Для работы, Вам необходимо иметь установленную версию **[Python](https://www.python.org/)** версии 3.8 и выше, **[Docker](https://www.docker.com/)**, **[Docker-Compose](https://docs.docker.com/compose/)**. 
+```
+Клонируем репозиторий на локальную машину и перейдите в рабочую директорию:
+git clone https://github.com/TheZavitaev/infra_sp2.git && cd infra_sp2
+
+В корневой папке находим файл .env.template. По образу и подобию необходимо создать файл .env и заполнить его своими значениями.
 
 Запускаем процесс сборки и запуска контейнеров:
+docker-compose up 
 
-docker-compose up
-Запускаем терминал внутри контейнера (на вин системах используйте winpty docker-compose exec web bash ):
-
+Запускаем терминал внутри контейнера (на вин системах используйте winpty docker-compose exec web bash):
 docker-compose exec web bash
-Накатываем миграции:
 
+Накатываем миграции:
 python manage.py migrate
 
 Собираем статику:
-
 python manage.py collectstatic --no-input
 
 Для создания администратора воспользуйтесь командой:
-
 python manage.py createsuperuser
 
 Для загрузки базы ингредиентов воспользуйтесь командой:
-
 python manage.py load_data
+```
+## Технологии
+- **[Python](https://www.python.org/)**,
+- **[Django](https://www.djangoproject.com/)**,
+- **[PostgreSQL](https://www.postgresql.org/)**,
+- **[NGINX](https://nginx.org/)**,
+- **[Docker](https://www.docker.com/)**,
+- **[Docker-Compose](https://docs.docker.com/compose/)**,
+- **[GitHub Actions](https://github.com/actions)**.
