@@ -1,38 +1,3 @@
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD:recipes/static/formRecipe.html
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Создание рецепта</title>
-    <link rel="stylesheet" href="pages/form.css">
-</head>
-<body class="body">
-<header class="header">
-    <nav class="nav">
-        <div class="nav__container container">
-            <ul class="nav__items list">
-                <li class="nav__item"><a href="#" class="nav__link link">Рецепты</a></li>
-                <li class="nav__item"><a href="#" class="nav__link link">Мои подписки</a></li>
-                <li class="nav__item"><a href="#" class="nav__link link">Создать рецепт</a></li>
-                <li class="nav__item"><a href="#" class="nav__link link">Избранное</a></li>
-                <li class="nav__item"><a href="#" class="nav__link link">Список покупок</a> <span class="badge badge_style_blue nav__badge" id="counter"></span></li>
-
-            </ul>
-            <ul class="nav__items list">
-                <li class="nav__item"><a href="#" class="nav__link link">Изменить пароль</a></li>
-                <li class="nav__item"><a href="#" class="nav__link link">Выход</a></li>
-            </ul>
-        </div>
-    </nav>
-</header>
-<main class="main container">
-=======
->>>>>>> 9839240... prereview v.3
 {% extends 'recipes/base.html' %}
 {% load static %}
 {% load user_filters %}
@@ -47,10 +12,6 @@
 
 {% block content %}
 
-<<<<<<< HEAD
-=======
->>>>>>> 9839240... prereview v.3:recipes/templates/recipes/recipe_form.html
->>>>>>> 9839240... prereview v.3
     <div class="main__header">
         <h1 class="main__title">
             {% if recipe %}Редактирование рецепта{% else %}Создание рецепта{% endif %}
@@ -119,15 +80,7 @@
             <div class="form__group">
                 <label for="{{ form.time.id_for_label }}" class="form__label">Время приготовления</label>
                 <div class="form__field-group form__field-group_time">
-<<<<<<< HEAD
                     {{ form.cooking_time|addclass:"form__input" }}
-=======
-<<<<<<< HEAD:recipes/static/formRecipe.html
-                    <input type="text" id="id_time" name="time" class="form__input">
-=======
-                    {{ form.cooking_time|addclass:"form__input" }}
->>>>>>> 9839240... prereview v.3:recipes/templates/recipes/recipe_form.html
->>>>>>> 9839240... prereview v.3
                     <label for="id_time" class="form__label">минут</label>
                     <span class="form__error"></span>
                 </div>
@@ -162,35 +115,9 @@
 
 {% endblock %}
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD:recipes/static/formRecipe.html
-</main>
-<footer class="footer">
-    <div class="footer__container container">
-        <a href="#" class="footer__brand link">Продуктовый помощник</a>
-        <ul class="footer__items">
-            <li class="footer__item"><a href="#" class="footer__link link">Об авторе </a></li>
-            <li class="footer__item"><a href="#" class="footer__link link">Технологии</a></li>
-        </ul>
-    </div>
-</footer>
-<script src="js/config/config.js"></script>
-<script src="js/components/Header.js"></script>
-<script src="js/utils/debouncing.js"></script>
-<script src="js/api/Api.js"></script>
-<script src="formRecipe.js"></script>
-</body>
-</html>
-=======
->>>>>>> 9839240... prereview v.3
 {% block scripts %}
 
     {% include 'recipes/includes/scripts.html' with page="formRecipe" %}
 
-<<<<<<< HEAD
-{% endblock scripts %}
-=======
-{% endblock scripts %}
->>>>>>> 9839240... prereview v.3:recipes/templates/recipes/recipe_form.html
->>>>>>> 9839240... prereview v.3
+{% endblock %}
+
