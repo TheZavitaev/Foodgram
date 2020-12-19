@@ -126,8 +126,9 @@ def profile(request, username):
     recipes_author = Recipe.objects.filter(author=profile)
     tags_qs, tags_from_get = get_tags_from_get(request)
     if tags_qs:
-        recipes_author = Recipe.objects.filter(author=profile,
-                                        tags__title__in=tags_qs).distinct()
+        recipes_author = Recipe.objects.filter(
+            author=profile,
+            tags__title__in=tags_qs).distinct()
 
     paginator = Paginator(recipes_author, 6)
     page_number = request.GET.get('page')
