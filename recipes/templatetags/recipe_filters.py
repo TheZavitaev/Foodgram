@@ -7,19 +7,6 @@ from recipes.models import Purchase, Recipe
 register = template.Library()
 
 
-# TODO: перенести в социал
-@register.filter(name='is_favorite')
-def is_favorite(recipe_id, user_id):
-    return FavoriteRecipes.objects.filter(
-        user_id=user_id, recipe_id=recipe_id).exists()
-
-
-@register.filter(name='is_subscribed')
-def is_subscribed(author, user_id):
-    return SubscribeToAuthor.objects.filter(
-        user=user_id, author=author).exists()
-
-
 @register.filter(name='purchase_list')
 def purchase_list(user_id):
     return Purchase.purchase.get_purchases_list(user_id)

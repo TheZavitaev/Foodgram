@@ -38,7 +38,10 @@ python manage.py createsuperuser
 Для загрузки базы ингредиентов воспользуйтесь командой:
 python manage.py load_data
 ```
-## Технологии
+
+#### После этого все манипуляции с сайтом вы можете совершать, перейдя по адресу: http://127.0.0.1/
+
+## Технологии:
 - **[Python](https://www.python.org/)**,
 - **[Django](https://www.djangoproject.com/)**,
 - **[PostgreSQL](https://www.postgresql.org/)**,

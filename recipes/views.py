@@ -10,6 +10,7 @@ from django.views import View
 from django.views.decorators.http import require_GET
 from xhtml2pdf import pisa
 
+from foodgram.settings import PAGINATOR_ITEMS_ON_THE_PAGE
 from users.models import User
 from .forms import RecipeForm
 from .models import Recipe, IngredientValue, Purchase
@@ -25,7 +26,7 @@ def index(request):
     if tags_qs:
         recipes = Recipe.objects.filter(tags__title__in=tags_qs).distinct()
 
-    paginator = Paginator(recipes, 6)
+    paginator = Paginator(recipes, PAGINATOR_ITEMS_ON_THE_PAGE)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     return render(
@@ -130,7 +131,7 @@ def profile(request, username):
             author=profile,
             tags__title__in=tags_qs).distinct()
 
-    paginator = Paginator(recipes_author, 6)
+    paginator = Paginator(recipes_author, PAGINATOR_ITEMS_ON_THE_PAGE)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     return render(request, 'recipes/recipes_list.html',

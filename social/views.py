@@ -4,6 +4,7 @@ from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
 
+from foodgram.settings import PAGINATOR_ITEMS_ON_THE_PAGE
 from recipes.models import Recipe
 from recipes.utils import get_tags_from_get
 from social.models import FavoriteRecipes, SubscribeToAuthor
@@ -19,7 +20,7 @@ def favorites(request, username):
         recipes = Recipe.objects.filter(favorite_recipe__user=request.user,
                                         tags__title__in=tags_qs).distinct()
 
-    paginator = Paginator(recipes, 6)
+    paginator = Paginator(recipes, PAGINATOR_ITEMS_ON_THE_PAGE)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     return render(request, 'recipes/recipes_list.html', {
@@ -49,7 +50,7 @@ def my_subscriptions(request, username):
     user = get_object_or_404(User, username=username)
     subscriptions = User.objects.prefetch_related('recipe_author').filter(
         following__user=user.id)
-    paginator = Paginator(subscriptions, 6)
+    paginator = Paginator(subscriptions, PAGINATOR_ITEMS_ON_THE_PAGE)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     return render(
