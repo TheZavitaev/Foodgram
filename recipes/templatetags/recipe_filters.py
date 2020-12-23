@@ -1,10 +1,11 @@
+import pymorphy2
 from django import template
 from django.shortcuts import get_object_or_404
 
-from social.models import FavoriteRecipes, SubscribeToAuthor
 from recipes.models import Purchase, Recipe
 
 register = template.Library()
+morph = pymorphy2.MorphAnalyzer()
 
 
 @register.filter(name='purchase_list')
@@ -22,13 +23,8 @@ def recipe_in_cart(recipe_id, user_id):
 
 @register.filter(name='plural_recipes')
 def plural_recipe(number):
-    if number % 10 == 1 and number not in (11, 111):
-        ending = ''
-    elif 1 < number % 10 < 5 and number not in (12, 13, 14, 112, 113, 114):
-        ending = 'а'
-    else:
-        ending = 'ов'
-    return ending
+    word = morph.parse('рецепт')[0]
+    return word.make_agree_with_number(number).word
 
 
 @register.filter
