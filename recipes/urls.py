@@ -1,8 +1,9 @@
 from django.urls import path
 
 from recipes.views import (recipe_view, recipe_edit, recipe_add,
-                           recipe_delete, index, profile, ingredients_for_js,
-                           PurchaseView, delete_purchase, download_shop_list)
+                           recipe_delete, index, profile,
+                           PurchaseView, delete_purchase, download_shop_list,
+                           ingredients_for_js)
 
 urlpatterns = [
     path('new_recipe/', recipe_add, name='new_recipe'),

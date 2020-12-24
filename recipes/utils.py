@@ -1,4 +1,5 @@
 import os
+from urllib.parse import unquote
 
 from django.contrib.staticfiles import finders
 from django.shortcuts import get_object_or_404
@@ -8,15 +9,9 @@ from .models import Ingredient, Tag, IngredientValue
 
 
 def get_ingredients_for_js(request):
-    text = request.GET['query']
-    ingredients = Ingredient.objects.filter(title__istartswith=text)
-    ing_list = []
-    ing_dict = {}
-    for ing in ingredients:
-        ing_dict['title'] = ing.title
-        ing_dict['dimension'] = ing.dimension
-        ing_list.append(ing_dict)
-    return ing_list
+    query = unquote(request.GET.get('query'))
+    return list(Ingredient.objects.filter(
+        title__startswith=query).values('title', 'dimension'))
 
 
 def get_ingredients_for_views(recipe):
@@ -57,14 +52,29 @@ def get_tags(request):
     return tags
 
 
+# def get_tags_from_get(request):
+#     tags_from_get = []
+#
+#     if 'tags' in request.GET:
+#         request.GET = request.GET.copy()
+#         tags_from_get = request.GET.getlist('tags')  # breakfast,lunch,dinner
+#         tag_list = tags_from_get  # ['breakfast,lunch,dinner'] -> ','.join
+#         tags_qs = Tag.objects.filter(title__in=tag_list).values('title')  # <QuerySet [{'title': 'breakfast'}, {'title': 'lunch'}, {'title': 'dinner'}]>
+#     else:
+#         tags_qs = False
+#     return [tags_qs, tags_from_get]
+
+
 def get_tags_from_get(request):
     tags_from_get = []
     if 'tags' in request.GET:
+
         tags_from_get = request.GET.get('tags')
         _ = tags_from_get.split(',')
         tags_qs = Tag.objects.filter(title__in=_).values('title')
     else:
         tags_qs = False
+
     return [tags_qs, tags_from_get]
 
 

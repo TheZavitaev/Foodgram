@@ -5,6 +5,8 @@ from django.shortcuts import get_object_or_404
 from recipes.models import Purchase, Recipe
 
 register = template.Library()
+
+# Используем для формирования окончаний в словах
 morph = pymorphy2.MorphAnalyzer()
 
 
@@ -27,17 +29,40 @@ def plural_recipe(number):
     return word.make_agree_with_number(number).word
 
 
+# @register.filter
+# def formatting_tags(request, tag):
+#     if 'tags' in request.GET:
+#         tags = request.GET.getlist('tags')  # ['dinner', 'breakfast', 'lunch']
+#
+#         if tag not in tags:
+#             tags.append(tag)
+#         else:
+#             tags.remove(tag)
+#         if '' in tags:
+#             tags.remove('')
+#
+#         result = ','.join(tags)  # dinner,breakfast,lunch
+#         return result
+#
+#     return tag
+
+
 @register.filter
 def formatting_tags(request, tag):
     if 'tags' in request.GET:
-        tags = request.GET.get('tags')
-        tags = tags.split(',')
+
+        tags = request.GET.get('tags')  # dinner,breakfast,lunch
+        tags = tags.split(',')  # ['dinner', 'breakfast', 'lunch']
+
         if tag not in tags:
             tags.append(tag)
         else:
             tags.remove(tag)
         if '' in tags:
             tags.remove('')
-        result = ','.join(tags)
+
+        result = ','.join(tags)  # dinner,breakfast,lunch
+        print(result)
         return result
+
     return tag

@@ -141,8 +141,8 @@ def profile(request, username):
 
 
 def ingredients_for_js(request):
-    ingredient_list = get_ingredients_for_js(request)
-    return JsonResponse(ingredient_list, safe=False)
+    data = get_ingredients_for_js(request)
+    return JsonResponse(data, safe=False)
 
 
 class PurchaseView(View):
