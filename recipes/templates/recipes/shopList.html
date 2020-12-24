@@ -34,7 +34,8 @@
 
         </ul>
         {% if recipes_list %}
-            <a href="{% url 'download_shop_list' %}" target="_blank"><button class="button button_style_blue">Скачать список</button></a>
+            <a href="{% url 'download_shop_list_txt' %}" target="_blank"><button class="button button_style_blue">Скачать список в виде текстового файла</button></a>
+{#            <a href="{% url 'download_shop_list' %}" target="_blank"><button class="button button_style_blue">Скачать список в PDF</button></a>#}
         {% endif %}
     </div>
 

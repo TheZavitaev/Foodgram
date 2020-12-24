@@ -29,24 +29,6 @@ def plural_recipe(number):
     return word.make_agree_with_number(number).word
 
 
-# @register.filter
-# def formatting_tags(request, tag):
-#     if 'tags' in request.GET:
-#         tags = request.GET.getlist('tags')  # ['dinner', 'breakfast', 'lunch']
-#
-#         if tag not in tags:
-#             tags.append(tag)
-#         else:
-#             tags.remove(tag)
-#         if '' in tags:
-#             tags.remove('')
-#
-#         result = ','.join(tags)  # dinner,breakfast,lunch
-#         return result
-#
-#     return tag
-
-
 @register.filter
 def formatting_tags(request, tag):
     if 'tags' in request.GET:
@@ -66,3 +48,21 @@ def formatting_tags(request, tag):
         return result
 
     return tag
+
+
+# @register.filter
+# def formatting_tags(request, tag):
+#     if 'tags' in request.GET:
+#         tags = request.GET.getlist('tags')  # ['dinner', 'breakfast', 'lunch']
+#
+#         if tag not in tags:
+#             tags.append(tag)
+#         else:
+#             tags.remove(tag)
+#         if '' in tags:
+#             tags.remove('')
+#
+#         result = ','.join(tags)  # dinner,breakfast,lunch
+#         return result
+#
+#     return tag

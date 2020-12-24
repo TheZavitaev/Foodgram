@@ -1,14 +1,12 @@
 import json
+
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.db.models import Sum
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
-from django.template.loader import get_template
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.http import require_GET
-from xhtml2pdf import pisa
 
 from foodgram.settings import PAGINATOR_ITEMS_ON_THE_PAGE
 from users.models import User
@@ -16,7 +14,7 @@ from .forms import RecipeForm
 from .models import Recipe, IngredientValue, Purchase
 from .utils import (get_tags_from_get, get_ingredients_for_views,
                     get_ingredients_for_js, get_ingredients_from_form,
-                    link_callback, save_recipe)
+                    save_recipe, create_shoplist_txt)
 
 
 def index(request):
@@ -187,23 +185,35 @@ def delete_purchase(request, recipe_id):
 
 @login_required()
 @require_GET
-def download_shop_list(request):
-    recipes = Purchase.purchase.get_purchases_list(request.user).values(
-        'ingredients__title', 'ingredients__dimension'
-    )
-    ingredients = recipes.annotate(Sum('recipe_values__value')).order_by()
-    template_path = 'recipes/pdf.html'
-    context = {'ingredients': ingredients}
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="shop_list.pdf"'
-    template = get_template(template_path)
-    html = template.render(context)
-    pisa_status = pisa.CreatePDF(html.encode('UTF-8'), dest=response,
-                                 encoding='UTF-8', link_callback=link_callback
-                                 )
-    if pisa_status.err:
-        return HttpResponse('We had some errors <pre>' + html + '</pre>')
+def download_shop_list_txt(request):
+    user = request.user
+    filename = f'{user.username}_list.txt'
+    content = create_shoplist_txt(user)
+    response = HttpResponse(content, content_type='text/plain')
+    response['Content-Disposition'] = f'attachment; filename={filename}'
     return response
+
+
+# Проблемы с кодировкой, попробую победить это потом на *nix системах
+# @login_required()
+# @require_GET
+# def download_shop_list(request):
+#     recipes = Purchase.purchase.get_purchases_list(request.user).values(
+#         'ingredients__title', 'ingredients__dimension'
+#     )
+#     ingredients = get_ingredients_amount_list(recipes)
+#     template_path = 'recipes/pdf.html'
+#     context = {'ingredients': ingredients}
+#     response = HttpResponse(content_type='application/pdf')
+#     response['Content-Disposition'] = 'attachment; filename="shop_list.pdf"'
+#     template = get_template(template_path)
+#     html = template.render(context)
+#     pisa_status = pisa.CreatePDF(html.encode('UTF-8'),
+#     dest=response,
+#     encoding='UTF-8', link_callback=link_callback)
+#     if pisa_status.err:
+#         return HttpResponse('We had some errors <pre>' + html + '</pre>')
+#     return response
 
 
 def page_not_found(request, exception):
