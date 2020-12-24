@@ -1,20 +1,25 @@
 version: '3.8'
 
 volumes:
+  static_volume:
   postgres_data:
+  media_volume:
 
 services:
   db:
     image: postgres:13.0
+    container_name: postgres
     volumes:
       - ./postgres_data:/var/lib/postgresql/data/
     env_file:
       - ./.env
   web:
     image: thezavitaev/foodgram:latest
+    container_name: foodgram
     restart: always
     volumes:
-      - ./static:/code/static
+      - static_volume:/code/static
+      - media_volume:/code/media
     depends_on:
       - db
     env_file:
