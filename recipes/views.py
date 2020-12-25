@@ -21,6 +21,7 @@ def index(request):
     recipes = Recipe.objects.select_related('author').prefetch_related(
         'tags', )
     tags_qs, tags_from_get = get_tags_from_get(request)
+
     if tags_qs:
         recipes = Recipe.objects.filter(tags__title__in=tags_qs).distinct()
 
@@ -124,6 +125,7 @@ def profile(request, username):
     profile = get_object_or_404(User, username=username)
     recipes_author = Recipe.objects.filter(author=profile)
     tags_qs, tags_from_get = get_tags_from_get(request)
+
     if tags_qs:
         recipes_author = Recipe.objects.filter(
             author=profile,
@@ -192,28 +194,6 @@ def download_shop_list_txt(request):
     response = HttpResponse(content, content_type='text/plain')
     response['Content-Disposition'] = f'attachment; filename={filename}'
     return response
-
-
-# Проблемы с кодировкой, попробую победить это потом на *nix системах
-# @login_required()
-# @require_GET
-# def download_shop_list(request):
-#     recipes = Purchase.purchase.get_purchases_list(request.user).values(
-#         'ingredients__title', 'ingredients__dimension'
-#     )
-#     ingredients = get_ingredients_amount_list(recipes)
-#     template_path = 'recipes/pdf.html'
-#     context = {'ingredients': ingredients}
-#     response = HttpResponse(content_type='application/pdf')
-#     response['Content-Disposition'] = 'attachment; filename="shop_list.pdf"'
-#     template = get_template(template_path)
-#     html = template.render(context)
-#     pisa_status = pisa.CreatePDF(html.encode('UTF-8'),
-#     dest=response,
-#     encoding='UTF-8', link_callback=link_callback)
-#     if pisa_status.err:
-#         return HttpResponse('We had some errors <pre>' + html + '</pre>')
-#     return response
 
 
 def page_not_found(request, exception):

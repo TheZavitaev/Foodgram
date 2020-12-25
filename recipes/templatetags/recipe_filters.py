@@ -33,8 +33,8 @@ def plural_recipe(number):
 def formatting_tags(request, tag):
     if 'tags' in request.GET:
 
-        tags = request.GET.get('tags')  # dinner,breakfast,lunch
-        tags = tags.split(',')  # ['dinner', 'breakfast', 'lunch']
+        tags = request.GET.get('tags')
+        tags = tags.split(',')
 
         if tag not in tags:
             tags.append(tag)
@@ -43,26 +43,7 @@ def formatting_tags(request, tag):
         if '' in tags:
             tags.remove('')
 
-        result = ','.join(tags)  # dinner,breakfast,lunch
-        print(result)
+        result = ','.join(tags)
         return result
 
     return tag
-
-
-# @register.filter
-# def formatting_tags(request, tag):
-#     if 'tags' in request.GET:
-#         tags = request.GET.getlist('tags')  # ['dinner', 'breakfast', 'lunch']
-#
-#         if tag not in tags:
-#             tags.append(tag)
-#         else:
-#             tags.remove(tag)
-#         if '' in tags:
-#             tags.remove('')
-#
-#         result = ','.join(tags)  # dinner,breakfast,lunch
-#         return result
-#
-#     return tag

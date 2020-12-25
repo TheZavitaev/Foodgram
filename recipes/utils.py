@@ -1,18 +1,15 @@
-import os
 from urllib.parse import unquote
 
-from django.contrib.staticfiles import finders
 from django.db.models import Sum
 from django.shortcuts import get_object_or_404
 
-from foodgram import settings
 from .models import Ingredient, Tag, IngredientValue, Purchase
 
 
 def get_ingredients_for_js(request):
     query = unquote(request.GET.get('query'))
     return list(Ingredient.objects.filter(
-        title__startswith=query).values('title', 'dimension'))
+        title__icontains=query).values('title', 'dimension'))
 
 
 def get_ingredients_for_views(recipe):
@@ -51,15 +48,6 @@ def save_recipe(ingredients, recipe):
     IngredientValue.objects.bulk_create(recipe_ingredients)
 
 
-def get_tags(request):
-    tags = []
-
-    for key in request.POST.getlist('tag'):
-        tags.append(get_object_or_404(Tag, id=int(key)))
-
-    return tags
-
-
 def get_tags_from_get(request):
     tags_from_get = []
 
@@ -71,19 +59,6 @@ def get_tags_from_get(request):
         tags_qs = False
 
     return [tags_qs, tags_from_get]
-
-
-# def get_tags_from_get(request):
-#     tags_from_get = []
-#
-#     if 'tags' in request.GET:
-#         request.GET = request.GET.copy()
-#         tags_from_get = request.GET.getlist('tags')  # breakfast,lunch,dinner
-#         tag_list = tags_from_get  # ['breakfast,lunch,dinner'] -> ','.join
-#         tags_qs = Tag.objects.filter(title__in=tag_list).values('title')  # <QuerySet [{'title': 'breakfast'}, {'title': 'lunch'}, {'title': 'dinner'}]>
-#     else:
-#         tags_qs = False
-#     return [tags_qs, tags_from_get]
 
 
 def get_ingredients_amount_list(recipes):
@@ -102,34 +77,3 @@ def create_shoplist_txt(user):
     content = 'Продукт (единицы) - количество \n \n' + '\n'.join(products)
 
     return content
-
-
-def link_callback(uri, rel):
-    """
-    Convert HTML URIs to absolute system paths so xhtml2pdf can access those
-    resources
-    """
-    result = finders.find(uri)
-    if result:
-        if not isinstance(result, (list, tuple)):
-            result = [result]
-        result = list(os.path.realpath(path) for path in result)
-        path = result[0]
-    else:
-        sUrl = settings.STATIC_URL
-        sRoot = settings.STATIC_ROOT
-        mUrl = settings.MEDIA_URL
-        mRoot = settings.MEDIA_ROOT
-
-        if uri.startswith(mUrl):
-            path = os.path.join(mRoot, uri.replace(mUrl, ""))
-        elif uri.startswith(sUrl):
-            path = os.path.join(sRoot, uri.replace(sUrl, ""))
-        else:
-            return uri
-
-    if not os.path.isfile(path):
-        raise Exception(
-            'media URI must start with %s or %s' % (sUrl, mUrl)
-        )
-    return path

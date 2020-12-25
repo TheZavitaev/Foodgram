@@ -3,7 +3,7 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-DEBUG = False  # переключаем в True для локальной разработки.
+DEBUG = True  # переключаем в True для локальной разработки.
 
 if not DEBUG:
     SECRET_KEY = os.environ.get('SECRET_KEY')
