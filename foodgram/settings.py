@@ -3,7 +3,7 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-DEBUG = False  # используем для локальной разработки.
+DEBUG = False  # переключаем в True для локальной разработки.
 
 if not DEBUG:
     SECRET_KEY = os.environ.get('SECRET_KEY')
@@ -112,7 +112,7 @@ EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-MEDIA_URL = 'media/'
+MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 LOGIN_URL = '/auth/login'

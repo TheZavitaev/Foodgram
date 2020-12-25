@@ -83,6 +83,7 @@ jobs:
           port: 22
           source: './.env, nginx/default.conf, ./docker-compose.yaml'
           target: '/home/thezavitaev/code'
+          # не забывай пробрасывать конфиг nginx на место.
 
       - name: Executing remote ssh commands to deploy
         uses: appleboy/ssh-action@master
