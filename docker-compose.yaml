@@ -13,6 +13,7 @@ services:
       - ./postgres_data:/var/lib/postgresql/data/
     env_file:
       - ./.env
+
   web:
     image: thezavitaev/foodgram:latest
     container_name: foodgram
@@ -24,6 +25,8 @@ services:
       - db
     env_file:
       - ./.env
+    command: bash -c 'python manage.py collectstatic --noinput && python manage.py migrate --noinput'
+
   nginx:
     image: nginx:1.19.4
     container_name: webserver
