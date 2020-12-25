@@ -96,7 +96,7 @@ jobs:
             cd ./code
             sudo docker rmi thezavitaev/foodgram -f
             sudo docker pull thezavitaev/foodgram:latest
-            sudo docker-compose up --force-recreate -d web
+            sudo docker-compose up --force-recreate -d web -y
   send_message:
     runs-on: ubuntu-latest
     needs: deploy
