@@ -12,16 +12,6 @@ def get_ingredients_for_js(request):
         title__icontains=query).values('title', 'dimension'))
 
 
-def get_ingredients_for_views(recipe):
-    ingredients = []
-
-    for ingredient in recipe.ingredients.all():
-        value = ingredient.ingredient_values.get(recipe=recipe)
-        ingredients.append((ingredient.title, value, ingredient.dimension))
-
-    return ingredients
-
-
 def get_ingredients_from_form(request):
     ingredients = {}
 

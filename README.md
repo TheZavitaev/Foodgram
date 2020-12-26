@@ -1,6 +1,6 @@
 ![foodgram](https://github.com/TheZavitaev/foodgram-project/workflows/foodgram/badge.svg)
 
-# **[Da-Eda-project](84.201.176.31)**
+# **[Da-Eda-project](http://da-eda.ga/)**
 
 ![Banner](/static/banner.jpg)
 Выпускной проект программы Яндекс.Практикум **[Python-разработчик](https://praktikum.yandex.ru/backend-developer/)**

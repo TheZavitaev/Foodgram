@@ -1,10 +1,10 @@
 import json
 
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
-from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.http import require_GET
 
@@ -12,9 +12,10 @@ from foodgram.settings import PAGINATOR_ITEMS_ON_THE_PAGE
 from users.models import User
 from .forms import RecipeForm
 from .models import Recipe, IngredientValue, Purchase
-from .utils import (get_tags_from_get, get_ingredients_for_views,
-                    get_ingredients_for_js, get_ingredients_from_form,
-                    save_recipe, create_shoplist_txt)
+from .utils import (get_tags_from_get, get_ingredients_for_js,
+                    get_ingredients_from_form, save_recipe,
+                    create_shoplist_txt
+                    )
 
 
 def index(request):
@@ -38,7 +39,7 @@ def index(request):
 
 def recipe_view(request, username, recipe_id):
     recipe = get_object_or_404(Recipe, pk=recipe_id)
-    ingredients = get_ingredients_for_views(recipe)
+    ingredients = recipe.recipe_values.all().select_related('ingredient')
     if not request.user.is_authenticated:
         return render(
             request,
@@ -142,15 +143,14 @@ def profile(request, username):
 
 def ingredients_for_js(request):
     data = get_ingredients_for_js(request)
+    print(data)
     return JsonResponse(data, safe=False)
 
 
-class PurchaseView(View):
+class PurchaseView(LoginRequiredMixin, View):
     model = Purchase
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+    login_url = '/auth/login/'
+    redirect_field_name = 'redirect_to'
 
     def get_queryset(self):
         return self.model.purchase.get_purchases_list(self.request.user)
