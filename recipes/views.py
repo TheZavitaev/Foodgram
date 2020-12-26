@@ -1,6 +1,7 @@
 import json
 
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
@@ -142,15 +143,14 @@ def profile(request, username):
 
 def ingredients_for_js(request):
     data = get_ingredients_for_js(request)
+    print(data)
     return JsonResponse(data, safe=False)
 
 
-class PurchaseView(View):
+class PurchaseView(LoginRequiredMixin, View):
     model = Purchase
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+    login_url = '/auth/login/'
+    redirect_field_name = 'redirect_to'
 
     def get_queryset(self):
         return self.model.purchase.get_purchases_list(self.request.user)
