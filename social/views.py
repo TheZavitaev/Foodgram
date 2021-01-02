@@ -13,6 +13,7 @@ from users.models import User
 
 @login_required
 def favorites(request, username):
+    user = get_object_or_404(User, username=username)
     recipes = Recipe.objects.filter(favorite_recipe__user=request.user)
     tags_qs, tags_from_get = get_tags_from_get(request)
 

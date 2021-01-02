@@ -1,10 +1,13 @@
 from django import forms
+from django.core.exceptions import ValidationError
 from django.forms import ModelForm
 
-from recipes.models import Recipe, Ingredient, IngredientValue, Tag
+from recipes.models import Recipe, Ingredient
 
 
 class RecipeForm(ModelForm):
+    title = forms.CharField(max_length=256)
+    cooking_time = forms.IntegerField(min_value=1)
 
     class Meta:
         model = Recipe
@@ -13,52 +16,26 @@ class RecipeForm(ModelForm):
                   )
         widgets = {'tags': forms.CheckboxSelectMultiple()}
 
-    # def __init__(self, data=None, *args, **kwargs):
-    #     if data is not None:
-    #         data = data.copy()
-    #         data.update({'ingredients_ids': data.getlist('nameIngredient')})
-    #     self.ingredients_dict = None
-    #     super().__init__(data=data, *args, **kwargs)
-    #
     # def clean(self):
-    #     cleaned_data = super().clean()
+    #     ing_ids = []
     #
-    #     ids = self.data['ingredients_ids']
-    #     errors = []
+    #     for items in self.data.keys():
     #
-    #     if not ids:
-    #         error = forms.ValidationError('Необходимо указать ингредиенты')
-    #         self.add_error('ingredients', error)
-    #     #
-    #     # try:
-    #     #     count = Ingredient.objects.filter(pk__in=ids).count()
-    #     #     less_zero_quantity_values = [val for val in quantity if
-    #     #                                  int(val) < 0]
-    #     #
-    #     #     if less_zero_quantity_values:
-    #     #         errors.append(forms.ValidationError(
-    #     #             'Отрицательное количество ингредиентов '
-    #     #             'не может быть добавлено'
-    #     #         ))
-    #     #     if not count == len(ids):
-    #     #         raise ValueError
-    #     #
-    #     # except ValueError:
-    #     #     errors.append(forms.ValidationError(
-    #     #         'В форму переданы некоректные данные. '
-    #     #         'Возможно, вы попытались добавить несуществующий ингредиент '
-    #     #         'или ввели количество не в виде числа. \
-    #     #         Не надо так.'
-    #     #     ))
-    #     #
-    #     # except:
-    #     #     errors.append(forms.ValidationError(
-    #     #         'Произошла непредвиденная ошибка. '
-    #     #         'Попробуйте заполнить форму еще раз.'))
-    #     #
-    #     # for erorr in errors:
-    #     #     self.add_error('ingredients', erorr)
-    #     #
-    #     # self.ingredients_dict = dict(zip(ids, quantity))
+    #         if 'nameIngredient' in items:
+    #             name, ing_id = items.split('_')
+    #             ing_ids.append(ing_id)
     #
-    #     return cleaned_data
+    #     for ing_id in ing_ids:
+    #         title = self.data.get(f'nameIngredient_{ing_id}')
+    #         dimension = self.data.get(f'unitsIngredient_{ing_id}')
+    #         is_exists = Ingredient.objects.filter(
+    #             title=title[0], dimension=dimension
+    #         ).exists()
+    #
+    #         if not is_exists:
+    #             raise ValidationError(
+    #                 'Выберите ингредиент из предложенного списка'
+    #             )
+
+    def clean_tags(self):
+        pass

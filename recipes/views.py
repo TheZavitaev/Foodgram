@@ -99,10 +99,15 @@ def recipe_edit(request, recipe_id, username):
     if request.user != author:
         return redirect('recipe_view', username=username, recipe_id=recipe_id)
 
-    form = RecipeForm(request.POST, instance=recipe,
-                      files=request.FILES or None)
+    form = RecipeForm(request.POST or None,
+                      files=request.FILES or None, instance=recipe)
 
     if form.is_valid():
+        ingredients = get_ingredients_from_form(request)
+
+        if not ingredients:
+            form.add_error(None, 'Добавьте ингредиенты')
+
         IngredientValue.objects.filter(recipe=recipe).delete()
         recipe = form.save(commit=False)
         recipe.author = request.user
@@ -116,9 +121,12 @@ def recipe_edit(request, recipe_id, username):
                         username=request.user.username,
                         recipe_id=recipe.id)
 
+    all_ingredients = IngredientValue.objects.filter(recipe=recipe.id)
+
     return render(request,
                   'recipes/recipe_form.html',
-                  {'form': form, 'recipe': recipe, 'author': author}
+                  {'form': form, 'recipe': recipe, 'author': author,
+                   'all_ingredients': all_ingredients}
                   )
 
 
@@ -167,12 +175,12 @@ class PurchaseView(LoginRequiredMixin, View):
         recipe_id = json_data['id']
         recipe = get_object_or_404(Recipe, id=recipe_id)
         purchase = Purchase.purchase.get_user_purchase(user=request.user)
-        data = {
-            'success': 'true'
-        }
+        data = {'success': 'true'}
+
         if not purchase.recipes.filter(id=recipe_id).exists():
             purchase.recipes.add(recipe)
             return JsonResponse(data)
+
         data['success'] = 'false'
         return JsonResponse(data)
 

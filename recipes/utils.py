@@ -15,14 +15,27 @@ def get_ingredients_for_js(request):
 def get_ingredients_from_form(request):
     ingredients = {}
 
-    for key, ingredient_name in request.POST.items():
-        if 'nameIngredient' in key:
-            _ = key.split('_')
-            ingredients[ingredient_name] = int(
-                request.POST[f'valueIngredient_{_[1]}']
-            )
+    for key in request.POST:
+        if key.startswith('nameIngredient'):
+            ing_number = key[15:]
+            ingredients[request.POST[key]] = request.POST[
+                f'valueIngredient_{ing_number}'
+            ]
 
     return ingredients
+
+
+# def get_ingredients_from_form(request):
+#     ingredients = {}
+# этот вариант дает ошибку
+#     for key, ingredient_name in request.POST.items():
+#         if 'nameIngredient' in key:
+#             _ = key.split('_')
+#             ingredients[ingredient_name] = int(
+#                 request.POST[f'valueIngredient_{_[1]}']
+#             )
+#
+#     return ingredients
 
 
 def save_recipe(ingredients, recipe):
@@ -51,15 +64,11 @@ def get_tags_from_get(request):
     return [tags_qs, tags_from_get]
 
 
-def get_ingredients_amount_list(recipes):
-    return recipes.annotate(Sum('recipe_values__value')).order_by()
-
-
 def create_shoplist_txt(user):
     recipes = Purchase.purchase.get_purchases_list(user).values(
         'ingredients__title', 'ingredients__dimension'
     )
-    ingredients = get_ingredients_amount_list(recipes)
+    ingredients = recipes.annotate(Sum('recipe_values__value')).order_by()
     products = [
         (f'{i["ingredients__title"]} ({i["ingredients__dimension"]}) -'
          f' {i["recipe_values__value__sum"]}')
