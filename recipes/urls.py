@@ -16,8 +16,6 @@ urlpatterns = [
 
     path('purchases', PurchaseView.as_view(), name='purchases'),
     path('purchases/<int:recipe_id>', delete_purchase, name='delete_purchase'),
-    # path('purchases/download_pdf/',
-    #      download_shop_list, name='download_shop_list'),
     path('purchases/download_txt/',
          download_shop_list_txt, name='download_shop_list_txt'),
 

@@ -27,11 +27,13 @@
         {% include 'recipes/includes/filters.html' with filters=filters %}
     </div>
 
-        {% if author and author != user and user.is_authenticated %}
-        <div class="author-subscribe" data-author="{{ author.id }}">
-            <p style="padding: 0 0 2em 0;"><button class="button button_style_light-blue button_size_subscribe" name="subscribe" {% if is_subscribed %}>Отписаться от автора{% else %}data-out>Подписаться на автора{% endif %}</button></p>
+    {%if profile %}
+        {% if profile != user and user.is_authenticated %}
+        <div class="author-subscribe" data-author="{{ profile.id }}">
+            <p style="padding: 0 0 2em 0;"><button class="button button_style_light-blue button_size_subscribe" name="subscribe" {% if profile|is_subscribed:user.id %}>Отписаться от автора{% else %}data-out>Подписаться на автора{% endif %}</button></p>
         </div>
         {% endif %}
+    {% endif %}
 
     <div class="card-list">
     {% for recipe in page %}
@@ -80,7 +82,7 @@
 {% block scripts %}
     {% if current_page == 'favorite' %}
         {% include 'recipes/includes/scripts.html' with page='favorite' %}
-    {% elif author %}
+    {% elif profile %}
         {% include 'recipes/includes/scripts.html' with page='authorRecipe' %}
     {% elif user.is_authenticated %}
         {% include 'recipes/includes/scripts.html' with page='indexAuth' %}

@@ -20,10 +20,12 @@ urlpatterns = [
 
     path('favorites', add_favorites, name='add_favorites'),
     path('<str:username>/favorites/', favorites, name='favorite'),
-    path('favorites/<int:recipe_id>', remove_favorites, name='remove_favorites'),
+    path('favorites/<int:recipe_id>',
+         remove_favorites, name='remove_favorites'),
 
     path('subscriptions', subscribe, name='subscribe'),
-    path('<str:username>/subscriptions/', my_subscriptions, name='my_subscriptions'),
+    path('<str:username>/subscriptions/',
+         my_subscriptions, name='my_subscriptions'),
     path('subscriptions/<int:author_id>', unsubscribe, name='unsubscribe'),
 ]
 

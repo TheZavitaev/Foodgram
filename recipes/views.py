@@ -182,7 +182,7 @@ def delete_purchase(request, recipe_id):
     recipe = get_object_or_404(Recipe, id=recipe_id)
     purchase = Purchase.purchase.get(user=request.user)
     purchase.recipes.remove(recipe)
-    return redirect('purchases')
+    return JsonResponse({'success': True})
 
 
 @login_required()
