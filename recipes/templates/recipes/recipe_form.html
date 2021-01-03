@@ -46,7 +46,7 @@
                         {% for tag_choice, tag_title in form.tags.field.choices %}
                             <div class="tags__item">
                                 <input type="checkbox" name="tags" value="{{ tag_choice.instance.pk }}" id="id_{{ tag_choice.instance.name }}"
-                                       class="tags__checkbox tags__checkbox_style_{{ tag_choice.instance.color }}" {% if tag_title in recipe.taglist %}checked{% endif %}>
+                                       class="tags__checkbox tags__checkbox_style_{{ tag_choice.instance.color }}" checked>
                                 <label for="id_{{ tag_choice.instance.name }}" class="tags__label">{{ tag_choice.instance.name }}</label>
                             </div>
                         {% endfor %}
@@ -75,7 +75,7 @@
                     </div>
                     <div class="form__field-group-ingredientes-container">
 
-                        {% if all_ingredients %}
+                        {% if recipe %}
                             {% for ing in all_ingredients %}
                                 <div class="form__field-item-ingredient" id="ing_{{ forloop.counter }}">
                                     <span>{{ ing.ingredient.title }} {{ ing.value }}{{ ing.ingredient.dimension }}</span>

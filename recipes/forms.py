@@ -16,26 +16,19 @@ class RecipeForm(ModelForm):
                   )
         widgets = {'tags': forms.CheckboxSelectMultiple()}
 
-    # def clean(self):
-    #     ing_ids = []
-    #
-    #     for items in self.data.keys():
-    #
-    #         if 'nameIngredient' in items:
-    #             name, ing_id = items.split('_')
-    #             ing_ids.append(ing_id)
-    #
-    #     for ing_id in ing_ids:
-    #         title = self.data.get(f'nameIngredient_{ing_id}')
-    #         dimension = self.data.get(f'unitsIngredient_{ing_id}')
-    #         is_exists = Ingredient.objects.filter(
-    #             title=title[0], dimension=dimension
-    #         ).exists()
-    #
-    #         if not is_exists:
-    #             raise ValidationError(
-    #                 'Выберите ингредиент из предложенного списка'
-    #             )
+    def clean(self):
+        known_ids = []
+        for items in self.data.keys():
+            if 'nameIngredient' in items:
+                name, id = items.split('_')
+                known_ids.append(id)
 
-    def clean_tags(self):
-        pass
+        for id in known_ids:
+            title = self.data.get(f'nameIngredient_{id}')
+
+            if title != '':
+                is_exists = Ingredient.objects.filter(
+                    title=title).exists()
+
+                if not is_exists:
+                    raise ValidationError('Выберите ингредиент из списка')

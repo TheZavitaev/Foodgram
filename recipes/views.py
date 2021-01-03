@@ -13,9 +13,8 @@ from users.models import User
 from .forms import RecipeForm
 from .models import Recipe, IngredientValue, Purchase
 from .utils import (get_tags_from_get, get_ingredients_for_js,
-                    get_ingredients_from_form, save_recipe,
-                    create_shoplist_txt
-                    )
+                    get_ingredients_from_form, create_shoplist_txt,
+                    save_recipe)
 
 
 def index(request):
@@ -94,38 +93,28 @@ def recipe_delete(request, recipe_id, username):
 @login_required
 def recipe_edit(request, recipe_id, username):
     recipe = get_object_or_404(Recipe, pk=recipe_id)
-    author = get_object_or_404(User, pk=recipe.author_id)
 
-    if request.user != author:
+    if request.user != recipe.author:
         return redirect('recipe_view', username=username, recipe_id=recipe_id)
 
     form = RecipeForm(request.POST or None,
-                      files=request.FILES or None, instance=recipe)
+                      files=request.FILES or None,
+                      instance=recipe)
 
     if form.is_valid():
-        ingredients = get_ingredients_from_form(request)
-
-        if not ingredients:
-            form.add_error(None, 'Добавьте ингредиенты')
-
-        IngredientValue.objects.filter(recipe=recipe).delete()
         recipe = form.save(commit=False)
-        recipe.author = request.user
-        recipe.save()
-        recipe.recipe_values.all().delete()
-
         save_recipe(ingredients=get_ingredients_from_form(request),
                     recipe=recipe)
+
         form.save_m2m()
         return redirect('recipe_view',
                         username=request.user.username,
                         recipe_id=recipe.id)
-
     all_ingredients = IngredientValue.objects.filter(recipe=recipe.id)
 
     return render(request,
                   'recipes/recipe_form.html',
-                  {'form': form, 'recipe': recipe, 'author': author,
+                  {'form': form, 'recipe': recipe,
                    'all_ingredients': all_ingredients}
                   )
 
@@ -189,8 +178,10 @@ class PurchaseView(LoginRequiredMixin, View):
 def delete_purchase(request, recipe_id):
     recipe = get_object_or_404(Recipe, id=recipe_id)
     purchase = Purchase.purchase.get(user=request.user)
-    purchase.recipes.remove(recipe)
-    return JsonResponse({'success': True})
+    if not purchase.recipes.remove(recipe):
+        return JsonResponse({'success': True})
+    else:
+        return JsonResponse({'success': False})
 
 
 @login_required()

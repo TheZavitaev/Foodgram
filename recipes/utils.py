@@ -15,38 +15,26 @@ def get_ingredients_for_js(request):
 def get_ingredients_from_form(request):
     ingredients = {}
 
-    for key in request.POST:
-        if key.startswith('nameIngredient'):
-            ing_number = key[15:]
-            ingredients[request.POST[key]] = request.POST[
-                f'valueIngredient_{ing_number}'
+    for key, ingredient_name in request.POST.items():
+        if 'nameIngredient' in key:
+            _ = key.split('_')
+            ingredients[ingredient_name] = request.POST[
+                f'valueIngredient_{_[1]}'
             ]
 
     return ingredients
-
-
-# def get_ingredients_from_form(request):
-#     ingredients = {}
-# этот вариант дает ошибку
-#     for key, ingredient_name in request.POST.items():
-#         if 'nameIngredient' in key:
-#             _ = key.split('_')
-#             ingredients[ingredient_name] = int(
-#                 request.POST[f'valueIngredient_{_[1]}']
-#             )
-#
-#     return ingredients
 
 
 def save_recipe(ingredients, recipe):
     recipe_ingredients = []
 
     for title, value in ingredients.items():
-        ingredient = get_object_or_404(Ingredient, title=title)
-        rec_ingredient = IngredientValue(
-            value=value, ingredient=ingredient, recipe=recipe
-        )
-        recipe_ingredients.append(rec_ingredient)
+        if title != '':
+            ingredient = get_object_or_404(Ingredient, title=title)
+            rec_ingredient = IngredientValue(
+                value=value, ingredient=ingredient, recipe=recipe
+            )
+            recipe_ingredients.append(rec_ingredient)
 
     IngredientValue.objects.bulk_create(recipe_ingredients)
 
