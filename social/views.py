@@ -26,7 +26,7 @@ def favorites(request, username):
     page = paginator.get_page(page_number)
     return render(request, 'recipes/recipes_list.html', {
         'recipes': recipes, 'paginator': paginator, 'page': page,
-        'username': username, 'tags': tags_from_get
+        'username': user, 'tags': tags_from_get
     })
 
 
