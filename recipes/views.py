@@ -11,7 +11,7 @@ from django.views.decorators.http import require_GET
 from foodgram.settings import PAGINATOR_ITEMS_ON_THE_PAGE
 from users.models import User
 from .forms import RecipeForm
-from .models import Recipe, IngredientValue, Purchase
+from .models import Recipe, IngredientValue, Purchase, Tag
 from .utils import (get_tags_from_get, get_ingredients_for_js,
                     get_ingredients_from_form, create_shoplist_txt,
                     save_recipe)
@@ -100,10 +100,13 @@ def recipe_edit(request, recipe_id, username):
     form = RecipeForm(request.POST or None,
                       files=request.FILES or None,
                       instance=recipe)
+    all_ingredients = IngredientValue.objects.filter(recipe=recipe.id)
+    tags = Tag.objects.all()
 
     if form.is_valid():
         recipe = form.save(commit=False)
         IngredientValue.objects.filter(recipe=recipe.id).delete()
+        recipe.tags.remove()
         save_recipe(ingredients=get_ingredients_from_form(request),
                     recipe=recipe)
 
@@ -111,12 +114,11 @@ def recipe_edit(request, recipe_id, username):
         return redirect('recipe_view',
                         username=request.user.username,
                         recipe_id=recipe.id)
-    all_ingredients = IngredientValue.objects.filter(recipe=recipe.id)
 
     return render(request,
                   'recipes/recipe_form.html',
                   {'form': form, 'recipe': recipe,
-                   'all_ingredients': all_ingredients}
+                   'all_ingredients': all_ingredients, 'tags': tags}
                   )
 
 
