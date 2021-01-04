@@ -80,9 +80,9 @@
                                 <div class="form__field-item-ingredient" id="ing_{{ forloop.counter }}">
                                     <span>{{ ing.ingredient.title }} {{ ing.value }}{{ ing.ingredient.dimension }}</span>
                                     <span class="form__field-item-delete"></span>
-                                    <input id="nameIngredient_{{ forloop.counter }}" name="nameIngredient_{{ forloop.counter }}" type="hidden" value="{{ ingredient.ingredient.title }}">
-                                    <input id="valueIngredient_{{ forloop.counter }}" name="valueIngredient_{{ forloop.counter }}" type="hidden" value="{{ ingredient.count }}">
-                                    <input id="unitsIngredient_{{ forloop.counter }}" name="unitsIngredient_{{ forloop.counter }}" type="hidden" value="{{ ingredient.ingredient.dimension }}">
+                                    <input id="nameIngredient_{{ forloop.counter }}" name="nameIngredient_{{ forloop.counter }}" type="hidden" value="{{ ing.ingredient.title }}">
+                                    <input id="valueIngredient_{{ forloop.counter }}" name="valueIngredient_{{ forloop.counter }}" type="hidden" value="{{ ing.value }}">
+                                    <input id="unitsIngredient_{{ forloop.counter }}" name="unitsIngredient_{{ forloop.counter }}" type="hidden" value="{{ ing.ingredient.dimension }}">
                                 </div>
                             {% endfor %}
                         {% endif %}

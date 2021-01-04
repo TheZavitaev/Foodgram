@@ -29,12 +29,11 @@ def save_recipe(ingredients, recipe):
     recipe_ingredients = []
 
     for title, value in ingredients.items():
-        if title != '':
-            ingredient = get_object_or_404(Ingredient, title=title)
-            rec_ingredient = IngredientValue(
-                value=value, ingredient=ingredient, recipe=recipe
-            )
-            recipe_ingredients.append(rec_ingredient)
+        ingredient = get_object_or_404(Ingredient, title=title)
+        rec_ingredient = IngredientValue(
+            value=value, ingredient=ingredient, recipe=recipe
+        )
+        recipe_ingredients.append(rec_ingredient)
 
     IngredientValue.objects.bulk_create(recipe_ingredients)
 

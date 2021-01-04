@@ -103,6 +103,7 @@ def recipe_edit(request, recipe_id, username):
 
     if form.is_valid():
         recipe = form.save(commit=False)
+        IngredientValue.objects.filter(recipe=recipe.id).delete()
         save_recipe(ingredients=get_ingredients_from_form(request),
                     recipe=recipe)
 
